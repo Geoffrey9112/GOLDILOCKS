@@ -45,42 +45,48 @@ godilocks를 수정 재배포하는 경우 아파치 2.0, BSD 라이센스 규�
 >Memory : 2GB(최소) 이상<br>
 >
 <b>Build</b><br>
-GCC-4.8.5 이상의 버전에서 Build을 지원합니다.<br>
 Dependent package<br>
->1. 
->2. 
+>* gcc (4.4.7)
+>* glibc (2.1)
+>* ctags (5.8)
+>* cmake (2.8.12.2)
+>* gmake (3.81)
+>* bison (2.4.1)
+>* flex (2.5.35)
+>* java (1.6.0)
+>* doxygen (1.6.1)
+>* git
 >
 Configuration<br>
->1.
->2.
+>* System
+>   * sysctl.conf (/etc/sysctl.conf)
+>     * fs.file-max=65535
+>     * kernel.shmall = 2097152
+>     * kernel.shmmax = 4294967295
+>     * kernel.shmmni = 4096
+>     * kernel.sem = 250 32000 100 128
+>     * net.ipv4.ip_local_port_range = 9000 65500
+>     * net.core.rmem_default = 262144
+>     * net.core.rmem_max = 4194304
+>   * limits.conf (/etc/security/limits.conf)
+>     * username soft nofile 65535
+>     * username hard nofile 65535
+>     * username soft nproc 65535
+>     * username hard nproc 65535
+>     * username soft memlock unlimited
+>     * username hard memlock unlimited
+>* Goldilocks
+>   * export PRODUCT_HOME=/path/to/goldilocks
+>   * export GOLDILOCKS_HOME=$PRODUCT_HOME/Gliese/home
+>   * export GOLDILOCKS_DATA=$PRODUCT_HOME/Gliese/home
+>   * export PATH=$GOLDILOCKS_HOME/bin:$PATH
+>   * LD_LIBRARY_PATH=$GOLDILOCKS_HOME/lib:$LD_LIBRARY_PATH
 >
 Build<br>
->1. make clean
->2. make or make intall
+>* product.sh [debug | release] [parallel]
 >
 <b>Run</b><br>
-1. 운영환경 설정
->1.
->2.
->
-
-2. GODILOCKS 파라메터 설정
-
->1.
->2.
->3.
-
-3. GODILOCKS 실행
-
->1.
->2.
->3.
-
-4. GODILOCKS 동작 확인
-
->1.
->2.
->3.
+>* recreate.sh
 
 
 
