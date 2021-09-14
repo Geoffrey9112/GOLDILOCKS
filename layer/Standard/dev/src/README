@@ -1,0 +1,22 @@
+[include] internal include files
+[sta]     atomic
+[stb]     backtrace
+[std]     data transformation and calculation (mathmatic functions)
+[ste]     error
+[stf]     file
+[sth]     shared memory
+[sti]     misc
+[stl]     standard layer interface
+[stm]     network Message Passing
+[stn]     network I/O
+[sto]     dynamic linking lOader
+[stp]     semaphore
+[stq]     message queue
+[str]     strings
+[sts]     os/hardware related functions
+[stt]     time
+[stu]     user
+[stw]     wait for events on multiple socket descriptors
+[stx]     thread & process & signal
+[sty]     heap memory dynamic allocator
+[stz]     heap memory region allocator

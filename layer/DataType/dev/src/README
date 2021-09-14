@@ -1,0 +1,12 @@
+[include] internal include files
+[dtl]     data type layer interface
+[dtd]     Type Definition
+[dtc]     Type Casting(Conversion)
+[dts]     Character Set
+[dtt]     Character transliteration 
+[dtf]     Function
+[dtm]     Comparision 
+[dtk]     KeyRange, KeyFilter, Filter
+[dtb]     Bind Parameter, Fetch Parameter
+[dtz]     Time Zone
+  [dtzd]  Time Zone Data

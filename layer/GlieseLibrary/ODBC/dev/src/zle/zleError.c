@@ -1,0 +1,287 @@
+/*******************************************************************************
+ * zleError.c
+ *
+ * Copyright (c) 2011, SUNJESOFT Inc.
+ *
+ *
+ * IDENTIFICATION & REVISION
+ *        $Id$
+ *
+ * NOTES
+ *    
+ *
+ ******************************************************************************/
+
+#include <stl.h>
+
+/**
+ * @file zleError.c
+ * @brief Gliese API Internal Error Routines.
+ */
+
+/**
+ * @addtogroup zle
+ * @{
+ */
+
+stlErrorRecord gGlieseLibraryErrorTable[] =
+{
+    {/* ZLE_ERRCODE_INVALID_USE_OF_NULL_POINTER */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_INVALID_USE_OF_NULL_POINTER,
+        "Invalid use of null pointer"
+    },
+    {/* ZLE_ERRCODE_INVALID_ATTRIBUTE_OPTION_IDENTIFIER */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_INVALID_ATTRIBUTE_IDENTIFIER,
+        "Invalid attribute/option identifier"
+    },
+    {/* ZLE_ERRCODE_CONNECTION_NOT_OPEN */
+        STL_EXT_ERRCODE_CONNECTION_EXCEPTION_CONNECTION_DOES_NOT_EXIST,
+        "Connection not open"
+    },
+    {/* ZLE_ERRCODE_DRIVER_DOES_NOT_SUPPORT_THIS_FUNCTION */
+        STL_EXT_ERRCODE_DRIVER_DOES_NOT_SUPPORT_THIS_FUNCTION,
+        "Driver does not support this function"
+    },
+    {/* ZLE_ERRCODE_DRIVERS_SQLALLOCHANDLE_ON_SQL_HANDLE_ENV_FAILED */
+        STL_EXT_ERRCODE_DRIVERS_SQLALLOCHANDLE_ON_SQL_HANDLE_ENV_FAILED,
+        "Driver's SQLAllocHandle on SQL_HANDLE_ENV failed"
+    },
+    {/* ZLE_ERRCODE_DRIVERS_SQLALLOCHANDLE_ON_SQL_HANDLE_DBC_FAILED */
+        STL_EXT_ERRCODE_DRIVERS_SQLALLOCHANDLE_ON_SQL_HANDLE_DBC_FAILED,
+        "Driver's SQLAllocHandle on SQL_HANDLE_DBC failed"
+    },
+    {/* ZLE_ERRCODE_CONNECTION_NAME_IN_USE */
+        STL_EXT_ERRCODE_CONNECTION_EXCEPTION_CONNECTION_NAME_IN_USE,
+        "Connection name in use"
+    },
+    {/* ZLE_ERRCODE_INVALID_STRING_OR_BUFFER_LENGTH */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_INVALID_STRING_LENGTH_OR_BUFFER_LENGTH,
+        "Invalid string or buffer length"
+    },
+    {/* ZLE_ERRCODE_INVALID_AUTHORIZATION_SPECIFICATION */
+        STL_EXT_ERRCODE_INVALID_AUTHORIZATION_SPECIFICATION_NO_SUBCLASS,
+        "Invalid authorization specification"
+    },
+    {/* ZLE_ERRCODE_FUNCTION_SEQUENCE_ERROR */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_FUNCTION_SEQUENCE_ERROR,
+        "Function sequence error"
+    },
+    {/* ZLE_ERRCODE_INVALID_CURSOR_STATE */
+        STL_EXT_ERRCODE_INVALID_CURSOR_STATE_NO_SUBCLASS,
+        "Invalid cursor state"
+    },
+    {/* ZLE_ERRCODE_INVALID_TRANSACTION_OPERATION_CODE */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_INVALID_TRANSACTION_OPERATION_CODE,
+        "Invalid transaction operation code"
+    },
+    {/* ZLE_ERRCODE_OPTIONAL_FEATURE_NOT_IMPLEMENTED */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_OPTIONAL_FEATURE_NOT_IMPLEMENTED,
+        "Optional feature not implemented"
+    },
+    {/* ZLE_ERRCODE_INVALID_APPLICATION_BUFFER_TYPE */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_INVALID_DATA_TYPE_IN_APPLICATION_DESCRIPTOR,
+        "Invalid application buffer type"
+    },
+    {/* ZLE_ERRCODE_INVALID_DESCRIPTOR_INDEX */
+        STL_EXT_ERRCODE_DYNAMIC_SQL_ERROR_INVALID_DESCRIPTOR_INDEX,
+        "Invalid descriptor index"
+    },
+    {/* ZLE_ERRCODE_INVALID_SQL_DATA_TYPE */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_INVALID_DATA_TYPE,
+        "Invalid SQL data type"
+    },
+    {/* ZLE_ERRCODE_INVALID_PARAMETER_TYPE */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_INVALID_PARAMETER_MODE,
+        "Invalid parameter type"
+    },
+    {/* ZLE_ERRCODE_INVALID_ARGUMENT_VALUE */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_INVALID_USE_OF_NULL_POINTER,
+        "Invalid argument value"
+    },
+    {/* ZLE_ERRCODE_ATTRIBUTE_CANNOT_BE_SET_NOW */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_ATTRIBUTE_CANNOT_BE_SET_NOW,
+        "Attribute cannot be set now"
+    },
+    {/* ZLE_ERRCODE_INVALID_ATTRIBUTE_VALUE */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_INVALID_ATTRIBUTE_VALUE,
+        "Invalid attribute value"
+    },
+    {/* ZLE_ERRCODE_INVALID_TRANSACTION_STATE */
+        STL_EXT_ERRCODE_INVALID_TRANSACTION_STATE_NO_SUBCLASS,
+        "Invalid transaction state"
+    },
+    {/* ZLE_ERRCODE_GENERAL_ERROR */
+        STL_EXT_ERRCODE_GENERAL_ERROR_NO_SUBCLASS,
+        "General error"
+    },
+    {/* ZLE_ERRCODE_PREPARED_STATEMENT_NOT_A_CURSOR_SPECIFICATION */
+        STL_EXT_ERRCODE_DYNAMIC_SQL_ERROR_PREPARED_STATEMENT_NOT_A_CURSOR_SPECIFICATION,
+        "Prepared statement not a cursor-specification"
+    },
+    {/* ZLE_ERRCODE_STRING_DATA_RIGHT_TRUNCATED */
+        STL_EXT_ERRCODE_DATA_EXCEPTION_STRING_DATA_RIGHT_TRUNCATION,
+        "String data, right truncated"
+    },
+    {/* ZLE_ERRCODE_ASSOCIATED_STATEMENT_IS_NOT_PREPARED */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_ASSOCIATED_STATEMENT_IS_NOT_PREPARED,
+        "Associated statement is not prepared"
+    },
+    {/* ZLE_ERRCODE_OPTION_TYPE_OUT_OF_RANGE */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_INVALID_ATTRIBUTE_IDENTIFIER,
+        "Option type out of range"
+    },
+    {/* ZLE_ERRCODE_INDICATOR_VARIABLE_REQUIRED_BUT_NOT_SUPPLIED */
+        STL_EXT_ERRCODE_DATA_EXCEPTION_NULL_VALUE_NO_INDICATOR_PARAMETER,
+        "Indicator variable required but not supplied"
+    },
+    {/* ZLE_ERRCODE_ERROR_IN_ROW */
+        STL_EXT_ERRCODE_WARNING_ERROR_IN_ROW,
+        "Error in row"
+    },
+    {/* ZLE_ERRCODE_CANNOT_MODIFY_AN_IMPLEMENTATION_ROW_DESCRIPTROR */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_CANNOT_MODIFY_AN_IMPLEMENTATION_ROW_DESCRIPTROR,
+        "Cannot modify an implementation row descriptor"
+    },
+    {/* ZLE_ERRCODE_INVALID_DESCRIPTOR_FIELD_IDENTIFIER */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_INVALID_DESCRIPTOR_FIELD_IDENTIFIER,
+        "Invalid descriptor field identifier"
+    },
+    {/* ZLE_ERRCODE_RESTRICTED_DATA_TYPE_ATTRIBUTE_VIOLATION */
+        STL_EXT_ERRCODE_DYNAMIC_SQL_ERROR_RESTRICTED_DATA_TYPE_ATTRIBUTE_VIOLATION,
+        "Restricted parameter value violation"
+    },
+    {/* ZLE_ERRCODE_INTERVAL_FIELD_OVERFLOW */
+        STL_EXT_ERRCODE_DATA_EXCEPTION_INTERVAL_FIELD_OVERFLOW,
+        "Interval field overflow"
+    },
+    {/* ZLE_ERRCODE_NUMERIC_VALUE_OUT_OF_RANGE */
+        STL_EXT_ERRCODE_DATA_EXCEPTION_NUMERIC_VALUE_OUT_OF_RANGE,
+        "Numeric value out of range"
+    },
+    {/* ZLE_ERRCODE_WARNING_STRING_DATA_RIGHT_TRUNCATED */
+        STL_EXT_ERRCODE_WARNING_STRING_DATA_RIGHT_TRUNCATION_WARNING,
+        "String data, right truncated"
+    },
+    {/* ZLE_ERRCODE_INVALID_CHARACTER_VALUE_FOR_CAST_SPECIFICATION */
+        STL_EXT_ERRCODE_DATA_EXCEPTION_INVALID_CHARACTER_VALUE_FOR_CAST,
+        "Invalid character value for cast specification"
+    },
+    {/* ZLE_ERRCODE_WARNING_FRACTIONAL_TRUNCATION */
+        STL_EXT_ERRCODE_WARNING_FRACTIONAL_TRUNCATION,
+        "Fractional truncation"
+    },
+    {/* ZLE_ERRCODE_DATETIME_FIELD_OVERFLOW */
+        STL_EXT_ERRCODE_DATA_EXCEPTION_DATETIME_FIELD_OVERFLOW,
+        "Datetime field overflow"
+    },
+    {/* ZLE_ERRCODE_INVALID_DATETIME_FORMAT */
+        STL_EXT_ERRCODE_DATA_EXCEPTION_INVALID_DATETIME_FORMAT,
+        "Invalid datetime format"
+    },
+    {/* ZLE_ERRCODE_COMMUNICATION_LINK_FAILURE */
+        STL_EXT_ERRCODE_CONNECTION_EXCEPTION_COMMUNICATION_LINK_FAILURE,
+        "Communication link failure"
+    },
+    {/* ZLE_ERRCODE_INTERNAL_DATA_TYPE_IS_INVALID */
+        STL_EXT_ERRCODE_GENERAL_ERROR_NO_SUBCLASS,
+        "An invalid SQL type has occurred"
+    },
+    {/* ZLE_ERRCODE_INVALID_CURSOR_NAME */
+        STL_EXT_ERRCODE_INVALID_CURSOR_NAME_NO_SUBCLASS,
+        "Invalid cursor name"
+    },
+    {/* ZLE_ERRCODE_FAILED_TO_ATOMIC_EXECUTION */
+        STL_EXT_ERRCODE_GENERAL_ERROR_NO_SUBCLASS,
+        "Failed to atomic execution"
+    },
+    {/* ZLE_ERRCODE_INVALID_DRIVER_COMPLETION */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_INVALID_DRIVER_COMPLETION,
+        "Invalid driver completion"
+    },
+    {/* ZLE_ERRCODE_DRIVER_KEYWORD_SYNTAX_ERROR */
+        STL_EXT_ERRCODE_DRIVER_KEYWORD_SYNTAX_ERROR,
+        "DRIVER keyword syntax error"
+    },
+    {/* ZLE_ERRCODE_CLIENT_UNABLE_TO_ESTABLISH_CONNECTION */
+        STL_EXT_ERRCODE_CONNECTION_EXCEPTION_SQLCLIENT_UNABLE_TO_ESTABLISH_SQLCONNECTION,
+        "Client unable to establish connection"
+    },
+    {/* ZLE_ERRCODE_INFORMATION_TYPE_OUT_OF_RANGE */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_INVALID_INFORMATION_TYPE,
+        "Information type out of range"
+    },
+    {/* ZLE_ERRCODE_DATA_SOURCE_NOT_FOUND_AND_NO_DEFAULT_DRIVER_SPECIFIED */
+        STL_EXT_ERRCODE_DATA_SOURCE_NAME_NOT_FOUND_AND_NO_DEFAULT_DRIVER_SPECIFIED,
+        "Data source not found and no default driver specified"
+    },
+    {/* ZLE_ERRCODE_FETCH_TYPE_OUT_OF_RANGE */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_INVALID_FETCH_ORIENTATION,
+        "Fetch type out of range"
+    },
+    {/* ZLE_ERRCODE_UNIQUENESS_OPTION_TYPE_OUT_OF_RANGE */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_UNIQUENESS_OPTION_TYPE_OUT_OF_RANGE,
+        "Uniqueness option type out of range"
+    },
+    {/* ZLE_ERRCODE_ACCURACY_OPTION_TYPE_OUT_OF_RANGE */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_ACCURACY_OPTION_TYPE_OUT_OF_RANGE,
+        "Accuracy option type out of range"
+    },
+    {/* ZLE_ERRCODE_COLUMN_TYPE_OUT_OF_RANGE */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_COLUMN_TYPE_OUT_OF_RANGE,
+        "Column type out of range"
+    },
+    {/* ZLE_ERRCODE_SCOPE_TYPE_OUT_OF_RANGE */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_SCOPE_OUT_OF_RANGE,
+        "Scope type out of range"
+    },
+    {/* ZLE_ERRCODE_NULLABLE_TYPE_OUT_OF_RANGE */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_NULLABLE_TYPE_OUT_OF_RANGE,
+        "Nullable type out of range"
+    },
+    {/* ZLE_ERRCODE_INCONSISTENT_DESCRIPTOR_INFORMATION */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_INCONSISTENT_DESCRIPTOR_INFORMATION,
+        "Inconsistent descriptor information"
+    },
+    {/* ZLE_ERRCODE_WARNING_OPTION_VALUE_CHANGED */
+        STL_EXT_ERRCODE_WARNING_OPTION_VALUE_CHANGED,
+        "Option value changed"
+    },
+    {/* ZLE_ERRCODE_INVALID_CURSOR_POSITION */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_INVALID_CURSOR_POSITION,
+        "Invalid cursor position"
+    },
+    {/* ZLE_ERRCODE_ROW_VALUE_OUT_OF_RANGE */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_ROW_VALUE_OUT_OF_RANGE,
+        "Row value out of range"
+    },
+    {/* ZLE_ERRCODE_TIMEOUT_EXPIRED */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_TIMEOUT_EXPIRED,
+        "Timeout expired"
+    },
+    {/* ZLE_ERRCODE_INVALID_CHARACTER_SET_NAME */
+        STL_EXT_ERRCODE_INVALID_CHARACTER_SET_NAME_NO_SUBCLASS,
+        "Invalid or unknown NLS parameter value specified"
+    },
+    {/* ZLE_ERRCODE_ATTEMPT_TO_CONCATENATE_A_NULL_VALUE */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_ATTEMPT_TO_CONCATENATE_A_NULL_VALUE,
+        "Attempt to concatenate a null value"
+    },
+    {/* ZLE_ERRCODE_NON_CHARACTER_AND_NON_BINARY_DATA_SENT_IN_PIECES */
+        STL_EXT_ERRCODE_CLI_SPECIFIC_CONDITION_NON_STRING_DATA_CANNOT_BE_SENT_IN_PIECES,
+        "Non-character and non-binary data sent in pieces"
+    },
+    {/* ZLE_ERRCODE_INVALID_ODBC_INI */
+        STL_EXT_ERRCODE_GENERAL_ERROR_NO_SUBCLASS,
+        "Invalid \'odbc.ini\' specification. property : [%s] "
+    },
+    {/* ZLE_ERRCODE_DIALOG_FAILED */
+        STL_EXT_ERRCODE_DIAGLOG_FAILED,
+        "Dialog failed"
+    },
+    {
+        0,
+        NULL
+    }
+};
+
+/** @} */

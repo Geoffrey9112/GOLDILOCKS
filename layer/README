@@ -1,0 +1,23 @@
+------------------------------------------------------
+Sunjesoft Product Layer Architecture
+------------------------------------------------------
+
+# DBM dependent layer
+GlieseTool        : DBM master utilies
+GlieseLibrary     : DBM API
+
+# DBMS dependent layer
+GoldilocksTool    : DBMS Utilities
+GoldilocksLibrary : DBMS API such as ODBC, JDBC, Embedded SQL
+PsmProcessor      : PSM Processor
+Multiplexer       : Multiplexing
+Session           : Session
+SqlProcessor      : SQL Processor
+
+# Common layer
+ExecutionLibrary  : Execution Library
+StorageManager    : Storage Manager
+Kernel            : Kernel
+DataType          : Data type Layer
+Standard          : Standard interface layer
+

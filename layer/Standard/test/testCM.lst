@@ -1,0 +1,9 @@
+1. Test communication manager : IPv4
+  => PASS
+2. Test communication manager : IPv6
+  => PASS
+3. Test communication manager : Unix domain
+  => PASS
+4. Test passing FD :
+  => PASS
+  => PASS

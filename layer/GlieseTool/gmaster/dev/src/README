@@ -1,0 +1,4 @@
+[include] internal include files
+[gmb]     boot
+[gmm]     main
+[gmt]     threads

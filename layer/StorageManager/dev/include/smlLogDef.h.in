@@ -1,0 +1,437 @@
+/*******************************************************************************
+ * @SML_MARSHALL_SMALL_PREFIX@LogDef.h
+ *
+ * Copyright (c) 2011, SUNJESOFT Inc.
+ *
+ *
+ * IDENTIFICATION & REVISION
+ *        $Id: smlLogDef.h.in 5578 2012-09-13 07:05:25Z mkkim $
+ *
+ * NOTES
+ *    
+ *
+ ******************************************************************************/
+
+
+#ifndef _@SML_MARSHALL_LARGE_PREFIX@LOGDEF_H_
+#define _@SML_MARSHALL_LARGE_PREFIX@LOGDEF_H_ 1
+
+/**
+ * @file @SML_MARSHALL_SMALL_PREFIX@LogDef.h
+ * @brief Log Specification Definitions
+ */
+
+/**
+ * @brief LOG FILE HEADER specification
+ * <BR>
+ * <BR> --------------------------------------------------------------
+ * <BR> | LOG GROUP ID | BLOCK SIZE | BLOCK COUNT | LOG FILE SEQ NO  |
+ * <BR> --------------------------------------------------------------
+ * <BR> | FILE SIZE | PREV LAST LSN | CREATION TIME |
+ * <BR> ---------------------------------------------
+ * <BR>
+ * <BR> (1) LOG GROUP NO    : stlInt16
+ * <BR> (2) BLOCK SIZE      : stlInt16
+ * <BR> (3) BLOCK COUNT     : stlInt64
+ * <BR> (4) LOG FILE SEQ NO : stlInt64
+ * <BR> (5) FILE SIZE       : stlInt64
+ * <BR> (6) PREV LAST LSN   : stlInt64
+ * <BR> (7) CREATION TIME   : stlTime
+ */
+
+/**
+ * @brief LOG FILE HEADER structure
+ */
+typedef struct @SML_MARSHALL_SMALL_PREFIX@LogFileHdr
+{
+    stlInt16  mLogGroupId;
+    stlInt16  mBlockSize;
+    stlInt64  mMaxBlockCount;
+    stlInt64  mLogFileSeqNo;
+    stlInt64  mFileSize;
+    stlInt64  mPrevLastLsn;
+    stlTime   mCreationTime;
+} @SML_MARSHALL_SMALL_PREFIX@LogFileHdr;
+
+
+/**
+ * @brief LOG HEADER specification
+ * <BR>
+ * <BR> -------------------------------------------------------------------------
+ * <BR> | LSN | SIZE | LOG PIECE COUNT | PADDING | TRANSACTION ID | SEGMENT RID |
+ * <BR> -------------------------------------------------------------------------
+ * <BR>
+ * <BR> (1) LSN : stlInt64
+ * <BR> (2) SIZE : stlUInt32
+ * <BR> (3) LOG PIECE COUNT : stlUInt16
+ * <BR> (4) PADDING : stlChar * 2
+ * <BR> (5) TRANSACTION ID : stlInt64
+ * <BR> (6) PHYSICAL ID : stlInt64
+ */
+
+/**
+ * @brief LOG HEADER structure
+ */
+typedef struct @SML_MARSHALL_SMALL_PREFIX@LogHdr
+{
+    stlInt64   mLsn;                 /**< Log Sequence Number */
+    stlUInt32  mSize;                /**< Log Size */
+    stlUInt16  mLogPieceCount;       /**< Log내 Piece의 개수 */
+    stlChar    mPadding[2];          /**< padding for 8bytes align */
+    stlInt64   mTransId;             /**< Log를 기록한 트랜잭션 아이디 */
+    stlInt64   mSegRid;              /**< Log와 관련된 세그먼트 아이디 */
+} @SML_MARSHALL_SMALL_PREFIX@LogHdr;
+
+/**
+ * @brief Macro to read_move LOG HEADER
+ */
+#define @SML_MARSHALL_LARGE_PREFIX@_READ_LOG_HDR( aDest, aSrc )                     \
+{                                                                                   \
+    stlMemcpy( (aDest), (aSrc), STL_SIZEOF( @SML_MARSHALL_SMALL_PREFIX@LogHdr ) );  \
+}
+    
+/**
+ * @brief Macro to read LOG HEADER
+ */
+#define @SML_MARSHALL_LARGE_PREFIX@_READ_MOVE_LOG_HDR( aDest, aSrc, aOffset )                  \
+{                                                                                              \
+    stlMemcpy( (aDest), (aSrc) + (aOffset), STL_SIZEOF( @SML_MARSHALL_SMALL_PREFIX@LogHdr ) ); \
+    (aOffset) += STL_SIZEOF( @SML_MARSHALL_SMALL_PREFIX@LogHdr );                              \
+}
+
+/**
+ * @brief LOG PIECE HEADER specification
+ * <BR>
+ * <BR> -------------------------------------------------------------------------
+ * <BR> | TYPE | SIZE | CLASS | TAGET TYPE | PROPAGATE LOG | PADDING | DATA RID |
+ * <BR> -------------------------------------------------------------------------
+ * <BR>
+ * <BR> (1) TYPE : stlUInt16
+ * <BR> (2) SIZE : stlUInt16
+ * <BR> (3) CLASS : stlChar
+ * <BR> (4) TARGET TYPE : stlChar
+ * <BR> (5) PROPAGATE LOG : stlBool
+ * <BR> (6) PADDING : stlChar * 1
+ * <BR> (7) DATA RID : stlInt64
+ */
+
+/**
+ * @brief LOG PIECE HEADER structure
+ */
+typedef struct @SML_MARSHALL_SMALL_PREFIX@LogPieceHdr
+{
+    stlUInt16 mType;
+    stlUInt16 mSize;
+    stlChar   mComponentClass;
+    stlChar   mRedoTargetType;
+    stlBool   mPropagateLog;        /**< CDC Active/Active 운영 시 Cycle detection용 Flag */
+    stlBool   mRepreparable;
+    stlInt64  mDataRid;
+} @SML_MARSHALL_SMALL_PREFIX@LogPieceHdr;
+
+/**
+ * @brief Macro to read_move LOG PIECE HEADER
+ */
+#define @SML_MARSHALL_LARGE_PREFIX@_READ_LOGPIECE_HDR( aDest, aSrc )                    \
+{                                                                                       \
+    stlMemcpy( (aDest), (aSrc), STL_SIZEOF( @SML_MARSHALL_SMALL_PREFIX@LogPieceHdr ) ); \
+}
+    
+/**
+ * @brief Macro to read LOG PIECE HEADER
+ */
+#define @SML_MARSHALL_LARGE_PREFIX@_READ_MOVE_LOGPIECE_HDR( aDest, aSrc, aOffset )                  \
+{                                                                                                   \
+    stlMemcpy( (aDest), (aSrc) + (aOffset), STL_SIZEOF( @SML_MARSHALL_SMALL_PREFIX@LogPieceHdr ) ); \
+    (aOffset) += STL_SIZEOF( @SML_MARSHALL_SMALL_PREFIX@LogPieceHdr );                              \
+}
+    
+/**
+ * @brief LOG BLOCK HEADER specification
+ * <BR>
+ * <BR> ------------------------------------------------------------------------
+ * <BR> | LSN | LOG COUNT | BLOCK INFO( FILE END, WRAP NO ) | FIRST LOG OFFSET |
+ * <BR> ------------------------------------------------------------------------
+ * <BR>
+ * <BR> (1) LSN : stlInt64
+ * <BR> (2) LOG COUNT : stlInt8
+ * <BR> (3) BLOCK INFO : stlInt16 ( FILE END, WRAP NO )
+ * <BR> (4) FIRST LOG OFFSET : stlInt16
+ */
+
+/**
+ * @brief LOG BLOCK HEADER structure
+ */
+typedef struct @SML_MARSHALL_SMALL_PREFIX@LogBlockHdr
+{
+    stlInt64 mLsn;
+    stlInt8  mLogCount;
+    stlInt16 mBlockInfo;
+    stlInt16 mFirstLogOffset;
+} @SML_MARSHALL_SMALL_PREFIX@LogBlockHdr;
+
+/**
+ * @brief Macro to read_move LOG BLOCK HEADER
+ */
+#define @SML_MARSHALL_LARGE_PREFIX@_READ_MOVE_LOG_BLOCK_HDR( aDest, aSrc, aOffset ) \
+{                                                                                   \
+    STL_READ_MOVE_INT64( &((aDest)->mLsn),            (stlChar*)(aSrc), aOffset );  \
+    STL_READ_MOVE_INT8(  &((aDest)->mLogCount),       (stlChar*)(aSrc), aOffset );  \
+    STL_READ_MOVE_INT16( &((aDest)->mBlockInfo),      (stlChar*)(aSrc), aOffset );  \
+    STL_READ_MOVE_INT16( &((aDest)->mFirstLogOffset), (stlChar*)(aSrc), aOffset );  \
+}
+
+/**
+ * @brief Macro to read LOG BLOCK HEADER
+ */
+#define @SML_MARSHALL_LARGE_PREFIX@_READ_LOG_BLOCK_HDR( aDest, aSrc )          \
+{                                                                              \
+    STL_WRITE_INT64( &((aDest)->mLsn),            (stlChar*)(aSrc) + 0 );      \
+    STL_WRITE_INT8(  &((aDest)->mLogCount),       (stlChar*)(aSrc) + 8 );      \
+    STL_WRITE_INT16( &((aDest)->mBlockInfo),      (stlChar*)(aSrc) + 9 );      \
+    STL_WRITE_INT16( &((aDest)->mFirstLogOffset), (stlChar*)(aSrc) + 11 );     \
+}
+
+
+/**
+ * @brief Macro to return file offset relatied to aBlockSeq
+ */
+#define @SML_MARSHALL_LARGE_PREFIX@_BLOCK_SEQ_FILE_OFFSET( aBlockSeq, aBlockSize )  \
+    ( ((stlInt64)(aBlockSeq) + 1) * (stlInt64)(aBlockSize) )
+
+#define @SML_MARSHALL_LARGE_PREFIX@_FILE_END_MASK            (0x8000)
+#define @SML_MARSHALL_LARGE_PREFIX@_FILE_END_TRUE            (0x8000)
+#define @SML_MARSHALL_LARGE_PREFIX@_FILE_END_FALSE           (0x0000)
+
+#define @SML_MARSHALL_LARGE_PREFIX@_CHAINED_BLOCK_MASK       (0x4000)
+#define @SML_MARSHALL_LARGE_PREFIX@_CHAINED_BLOCK_TRUE       (0x4000)
+#define @SML_MARSHALL_LARGE_PREFIX@_CHAINED_BLOCK_FALSE      (0x0000)
+
+#define @SML_MARSHALL_LARGE_PREFIX@_BLOCK_WRITE_MASK         (0x2000)
+#define @SML_MARSHALL_LARGE_PREFIX@_BLOCK_WRITE_START        (0x2000)
+#define @SML_MARSHALL_LARGE_PREFIX@_BLOCK_WRITE_FINISH       (0x0000)
+
+#define @SML_MARSHALL_LARGE_PREFIX@_WRAP_NO_MASK             (0x1FFF)
+#define @SML_MARSHALL_LARGE_PREFIX@_INVALID_WRAP_NO          (0x1000)
+#define @SML_MARSHALL_LARGE_PREFIX@_WRAP_NO_MAX              (0x0FFF)
+#define @SML_MARSHALL_LARGE_PREFIX@_WRAP_NO_CREATION_MASK    (STL_INT64_C(0x0000000000000FFF))
+
+#define @SML_MARSHALL_LARGE_PREFIX@_IS_LAST_FILE_BLOCK( aBlock )          \
+    ( ((aBlock)->mBlockInfo & @SML_MARSHALL_LARGE_PREFIX@_FILE_END_MASK)  \
+      == @SML_MARSHALL_LARGE_PREFIX@_FILE_END_TRUE )
+
+#define @SML_MARSHALL_LARGE_PREFIX@_BLOCK_FILE_END( aBlock ) \
+    ( (aBlock)->mBlockInfo & @SML_MARSHALL_LARGE_PREFIX@_FILE_END_MASK )
+
+#define @SML_MARSHALL_LARGE_PREFIX@_BLOCK_WRAP_NO( aBlock ) \
+    ( (aBlock)->mBlockInfo & @SML_MARSHALL_LARGE_PREFIX@_WRAP_NO_MASK )
+
+#define @SML_MARSHALL_LARGE_PREFIX@_IS_CHAINED_BLOCK( aBlock )                      \
+    ( (((aBlock)->mBlockInfo & @SML_MARSHALL_LARGE_PREFIX@_CHAINED_BLOCK_MASK) ==   \
+       @SML_MARSHALL_LARGE_PREFIX@_CHAINED_BLOCK_TRUE) ? STL_TRUE : STL_FALSE )
+
+#define @SML_MARSHALL_LARGE_PREFIX@_IS_VALID_LOG_LSN( aLsn )   ((aLsn) > 0)
+
+#define @SML_MARSHALL_LARGE_PREFIX@_IS_DUMMY_FILE_END_BLOCK( aBlock )  \
+    (@SML_MARSHALL_LARGE_PREFIX@_IS_LAST_FILE_BLOCK(aBlock) &&         \
+     !@SML_MARSHALL_LARGE_PREFIX@_IS_VALID_LOG_LSN((aBlock)->mLsn))
+
+#define @SML_MARSHALL_LARGE_PREFIX@_SET_BLOCK_WRITE_START( aBlock )       \
+    (aBlock)->mBlockInfo |= @SML_MARSHALL_LARGE_PREFIX@_BLOCK_WRITE_START;
+
+#define @SML_MARSHALL_LARGE_PREFIX@_SET_BLOCK_WRITE_FINISH( aBlock )            \
+    (aBlock)->mBlockInfo &= (~@SML_MARSHALL_LARGE_PREFIX@_BLOCK_WRITE_START);
+
+#define @SML_MARSHALL_LARGE_PREFIX@_IS_BLOCK_WRITE_FINISH( aBlock )        \
+    ( (((aBlock)->mBlockInfo & @SML_MARSHALL_LARGE_PREFIX@_BLOCK_WRITE_MASK) == \
+       @SML_MARSHALL_LARGE_PREFIX@_BLOCK_WRITE_FINISH) ? STL_TRUE : STL_FALSE ) 
+
+/**
+ * @brief Log Type Enumeration
+ */
+
+/**
+ * @defgroup @SML_MARSHALL_SMALL_PREFIX@LogType Log Type
+ * @ingroup @SML_MARSHALL_SMALL_PREFIX@Internal
+ * @{
+ */
+
+/*
+ * Table Component
+ */
+
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_HEAP_INSERT                0  /**< Memory Heap Table Insert Row redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_HEAP_UNINSERT              1  /**< Memory Heap Table Insert Row undo redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_HEAP_UPDATE                2  /**< Memory Heap Table Update Row redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_HEAP_UNUPDATE              3  /**< Memory Heap Table Update Row undo redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_HEAP_MIGRATE               4  /**< Memory Heap Table Migrate Row redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_HEAP_UNMIGRATE             5  /**< Memory Heap Table Migrate Row unredo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_HEAP_DELETE                6  /**< Memory Heap Table Delete Row redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_HEAP_UNDELETE              7  /**< Memory Heap Table Delete Row undo redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_HEAP_UPDATE_LINK           8  /**< Memory Heap Table Update next piece link redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_HEAP_INSERT_FOR_UPDATE     9  /**< Memory Heap Table Insert row for update */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_HEAP_DELETE_FOR_UPDATE    10  /**< Memory Heap Table Delete row for update */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_HEAP_UPDATE_LOGICAL_HDR   11  /**< Memory Heap Table Update Logical Header */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_HEAP_APPEND               12  /**< Memory Heap Table Append Row Redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_HEAP_UNAPPEND             13  /**< Memory Heap Table Unappend Row Redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_PENDING_INSERT            14  /**< Memory Pending Table Insert Row redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_HEAP_COMPACTION           15  /**< Memory Pending Table Insert Row redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_TABLE_LOG_MAX_COUNT                  16
+
+/*
+ * Index Component
+ */
+
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BTREE_INSERT_LEAF          0  /**< Memory B-Tree Index Insert Leaf Key redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BTREE_DUPKEY               1  /**< Memory B-Tree Index duplicated key insert */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BTREE_INSERT_INTL          2  /**< Memory B-Tree Index Insert Interanl Key redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BTREE_DELETE_LEAF          3  /**< Memory B-Tree Index Delete Leaf Key redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BTREE_UNDELETE_LEAF        4  /**< Memory B-Tree Index Delete Leaf Key redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BTREE_DELETE_INTL          5  /**< Memory B-Tree Index Delete Leaf Key redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_SET_ROOT_PAGE_ID                  6  /**< Index Relation Header에 root page 세팅 */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BTREE_NEW_ROOT             7  /**< Memory B-Tree Index Make New Root Node redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BTREE_SPLIT_NEW_PAGE       8  /**< Memory B-Tree Index Split New Page redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BTREE_SPLIT_OLD_PAGE       9  /**< Memory B-Tree Index Split Old Page redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BTREE_SET_PREV_PAGE_ID    10  /**< Memory B-Tree Index Set Prev Page redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BTREE_SET_NEXT_PAGE_ID    11  /**< Memory B-Tree Index Set Next Page redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BTREE_SET_CHILD_PID       12  /**< Memory B-Tree Index Set Child Pid redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BTREE_SET_NEXT_FREE_PAGE  13  /**< Memory B-Tree Index Set next free pid redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BTREE_AGING_COMPACT       14  /**< Memory B-Tree Index Aging redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_ADD_EMPTY_NODE                   15  /**< Index Relation Header에 empty node를 추가 */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_REMOVE_EMPTY_NODE                16  /**< Index Relation Header에서 empty node를 제거 */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BTREE_PAGE_IMAGE          17  /**< Memory B-Tree Index page image redo */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BTREE_SET_NODE_FLAG       18  /**< Memory B-Tree Index Node Flag Setting */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_ALTER_DATATYPE                   19  /**< Alter DataType */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_SET_MIRROR_ROOT_PAGE_ID          20  /**< Index Relation Header에 mirror root page 세팅 */
+#define @SML_MARSHALL_LARGE_PREFIX@_INDEX_LOG_MAX_COUNT                  21
+
+/*
+ * Relation Component
+ */
+
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_INIT_REL_HEADER            0  /**< Relation Header */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_SAVE_COLUMN_LENGTH         1  /**< Save Column Length */
+#define @SML_MARSHALL_LARGE_PREFIX@_RELATION_LOG_MAX_COUNT         2
+
+/*
+ * Page Access Component
+ */
+
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_INIT_PAGE                  0   /**< Init Page Log */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_INIT_PAGE_BODY             1   /**< Init Page Body Log */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_INIT_FIXED_PAGE_BODY       2   /**< Init Fixed Page Body Log */
+#define @SML_MARSHALL_LARGE_PREFIX@_PAGE_ACCESS_LOG_MAX_COUNT      3
+
+/*
+ * Datafile Component
+ */
+
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_FILE_CREATE          0  /**< 메모리 파일 생성 리두 로그 */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_FILE_DROP            1  /**< 메모리 파일 삭제 리두 로그 */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_TBS_CREATE           2  /**< 메모리 테이블스페이스 생성 리두 로그 */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_TBS_CREATE_CLR       3  /**< 메모리 테이블스페이스 생성 리두 로그 */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_TBS_DROP             4  /**< 메모리 테이블스페이스 삭제 리두 로그 */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_TBS_DROP_CLR         5  /**< 메모리 테이블스페이스 생성 리두 로그 */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_DATAFILE_ADD         6  /**< 메모리 데이터파일 추가 리두 로그 */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_DATAFILE_ADD_CLR     7  /**< 메모리 데이터파일 추가 리두 로그 */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_DATAFILE_DROP        8  /**< 메모리 데이터파일 삭제 리두 로그 */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_DATAFILE_DROP_CLR    9  /**< 메모리 데이터파일 삭제 리두 로그 */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_TBS_RENAME          10  /**< 메모리 테이블스페이스 이름 변경 리두 로그 */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_TBS_RENAME_CLR      11  /**< 메모리 테이블스페이스 이름 변경 리두 로그 */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_FILE_CREATE_CLR     12  /**< 메모리 파일 생성 리두 로그 */  
+#define @SML_MARSHALL_LARGE_PREFIX@_DATAFILE_LOG_MAX_COUNT         13
+
+/*
+ * Sequence Component
+ */
+
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_UPDATE_SEQUENCE_VALUE      0
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_UPDATE_SEQUENCE_META       1
+#define @SML_MARSHALL_LARGE_PREFIX@_SEQUENCE_LOG_MAX_COUNT         2
+
+/*
+ * Segment Component
+ */
+
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_CIRCULAR_UPDATE_SEGMENT_HDR      0   /**< Memory Circular Update Segment Header */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_CIRCULAR_UPDATE_EXT_HDR          1   /**< Memory Circular Update Extent Header */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BITMAP_INIT_INTERNAL             2   /**< Memory Bitmap Init Internal Node */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BITMAP_INIT_LEAF                 3   /**< Memory Bitmap Init Leaf Node */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BITMAP_UPDATE_LEAF_STATUS        4   /**< Memory Bitmap Update Leaf Status */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BITMAP_UPDATE_INTERNAL_STATUS    5   /**< Memory Bitmap Update Internal Status */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BITMAP_EXPAND_LEAF               6   /**< Memory Bitmap Expand Leaf */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BITMAP_INSERT_INTERNAL_BIT       7   /**< Memory Bitmap Insert Internal Bit */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BITMAP_INIT_EXTENT_MAP           8   /**< Memory Bitmap Init Extent Map */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BITMAP_ADD_EXTENT                9   /**< Memory Bitmap Add Extent */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BITMAP_UPDATE_SEGMENT_HDR       10   /**< Memory Bitmap Update Segment Header */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_BITMAP_FREE_EXTENT_MAP          11   /**< Memory Bitmap Free Extent Map */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_PENDING_UPDATE_SEGMENT_HDR      12   /**< Memory Pending Update Segment Header */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_MEMORY_PENDING_UPDATE_EXT_HDR          13   /**< Memory Pending Update Extent Header */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_INIT_SEGMENT_HDR                       14   /**< Initialize Segment Header */
+#define @SML_MARSHALL_LARGE_PREFIX@_SEGMENT_LOG_MAX_COUNT                      15
+
+/*
+ * Recovery Component
+ */
+
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_CHKPT_BEGIN                     0  /**< Checkpoint Begin Log */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_CHKPT_BODY                      1  /**< Checkpoint Body Log */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_CHKPT_END                       2  /**< Checkpoint End Log */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_BYTES                           3  /**< N Bytes Log */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_DUMMY                           4  /**< Dummy Log */
+#define @SML_MARSHALL_LARGE_PREFIX@_RECOVERY_LOG_MAX_COUNT              5
+
+/*
+ * Transaction Component
+ */
+
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_INSERT_UNDO_RECORD             0   /**< Insert Undo Record */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_INSERT_TRANSACTION_RECORD      1   /**< Insert Transaction Record */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_UPDATE_UNDO_RECORD_FLAG        2   /**< Update Undo Record Flag */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_COMMIT                         3   /**< Commit Log */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_ROLLBACK                       4   /**< Rollback Log */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_PREPARE                        5   /**< Prepare Log */
+#define @SML_MARSHALL_LARGE_PREFIX@_TRANSACTION_LOG_MAX_COUNT          6
+
+/*
+ * Tablespace Component
+ */
+
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_ALLOC_EXTENT                   0   /**< Alloc Extent Log */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_FREE_EXTENT                    1   /**< Free Extent Log */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_ADD_EXTENT_BLOCK               2   /**< Add Extent Block Log */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_CREATE_EXTENT_BLOCK            3   /**< Create Extent Block Log */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_CREATE_EXTENT_BLOCK_MAP        4   /**< Create Extent Block Map Log */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_UPDATE_EXT_BLOCK_DESC_STATE    5   /**< Update Extent Block Desc Log */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOG_UPDATE_EXT_BLOCK_MAP_HDR_STATE 6   /**< Update Extent Block Map Header State Log */
+#define @SML_MARSHALL_LARGE_PREFIX@_TABLESPACE_LOG_MAX_COUNT           7
+
+/** @} */
+
+/**
+ * @brief CDC를 사용할 때 Log Piece Header에서 CDC를 위해 Log 판독 여부를 판단한다.
+ * CDC의 Log Capture는 Log Piece Header의 mPropagateLog가 FALSE이면
+ * Log Piece 전체를 skip한다.
+ */
+#define @SML_MARSHALL_LARGE_PREFIX@_IS_PROPAGATE_REDO_LOG( aLogPieceHdr )    \
+    (((@SML_MARSHALL_SMALL_PREFIX@LogPieceHdr *)(aLogPieceHdr))->mPropagateLog)
+
+/**
+ * @brief CDC를 사용할 때 Log Piece Body에서 Transaction Id를 얻는다.
+ */
+#define @SML_MARSHALL_LARGE_PREFIX@_GET_TRANSID_FROM_PIECE_BODY( aLogPieceBody, aTransId ) \
+{                                                                                          \
+    stlMemcpy( aTransId, aLogPieceBody, STL_SIZEOF(stlInt64) );                            \
+}
+
+/**
+ * @brief Transaction Comment의 SIZE가 저장되어 있는 옵셋
+ */
+#define @SML_MARSHALL_LARGE_PREFIX@_TRANS_COMMENT_SIZE_OFFSET   ( 32 )
+/**
+ * @brief Transaction Comment가 저장되어 있는 옵셋
+ */
+#define @SML_MARSHALL_LARGE_PREFIX@_TRANS_COMMENT_OFFSET        ( 40 )
+
+
+#endif /* _@SML_MARSHALL_LARGE_PREFIX@LOGDEF_H_ */

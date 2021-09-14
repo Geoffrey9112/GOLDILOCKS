@@ -1,0 +1,8 @@
+1. Test stlAddSockPollSet
+  => PASS
+2. Test stlRemoveSockPollSet
+  => PASS
+3. Test stlPoll & stlPollPollSet
+Server received message 'Hwarang'
+Client received message 'Dambae'
+  => PASS

@@ -1,0 +1,119 @@
+CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
+
+SET( SML_MARSHALL_SMALL_PREFIX "ztr" )
+SET( SML_MARSHALL_LARGE_PREFIX "ZTR" )
+CONFIGURE_FILE(${PRODUCT_LAYER_STORAGEMANAGER_DIR}/dev/include/smlLogDef.h.in
+               ${CMAKE_CURRENT_SOURCE_DIR}/dev/include/${SML_MARSHALL_SMALL_PREFIX}LogDef.h)
+
+CONFIGURE_FILE(${PRODUCT_LAYER_STORAGEMANAGER_DIR}/dev/include/smlLogMirrorDef.h.in
+               ${CMAKE_CURRENT_SOURCE_DIR}/dev/include/${SML_MARSHALL_SMALL_PREFIX}LogMirrorDef.h)
+
+
+#set the Standard Library
+SET (ST_LIBRARY st)
+LINK_DIRECTORIES (${PRODUCT_LAYER_STANDARD_DIR}/dev/lib)
+
+#set the DataType Library
+SET (DT_LIBRARY dt)
+LINK_DIRECTORIES (${PRODUCT_LAYER_DATATYPE_DIR}/dev/lib)
+
+#set the Communication Library
+SET (CM_LIBRARY cm)
+LINK_DIRECTORIES (${PRODUCT_LAYER_COMMUNICATION_DIR}/dev/lib)
+
+#set the Kernel Library
+SET (KN_LIBRARY kn)
+LINK_DIRECTORIES (${PRODUCT_LAYER_KERNEL_DIR}/dev/lib)
+
+#set the Server Communication Library
+SET (SC_LIBRARY sc)
+LINK_DIRECTORIES (${PRODUCT_LAYER_SERVERCOMMUNICATION_DIR}/dev/lib)
+
+#set the Storage Library
+SET (SM_LIBRARY sm)
+LINK_DIRECTORIES (${PRODUCT_LAYER_STORAGEMANAGER_DIR}/dev/lib)
+
+#set the Execution Library
+SET (EL_LIBRARY el)
+LINK_DIRECTORIES (${PRODUCT_LAYER_EXECUTIONLIBRARY_DIR}/dev/lib)
+
+#set the SQL Processor Library
+SET (QP_LIBRARY qp)
+LINK_DIRECTORIES (${PRODUCT_LAYER_SQLPROCESSOR_DIR}/dev/lib)
+
+#set the Session Library
+SET (SS_LIBRARY ss)
+LINK_DIRECTORIES (${PRODUCT_LAYER_SESSION_DIR}/dev/lib)
+
+#set the Gliese Library
+SET (ZLA_LIBRARY zla)
+LINK_DIRECTORIES (${PRODUCT_LAYER_ODBC_DIR}/dev/lib)
+
+#set the gliesec Library 
+SET (ZLC_LIBRARY zlc)
+LINK_DIRECTORIES (${PRODUCT_LAYER_ODBC_DIR}/dev/lib)
+
+
+STL_FLEX_TARGET(GR_CONFIGURE_SCANNER
+                ${CMAKE_CURRENT_SOURCE_DIR}/dev/src/ztrc/ztrcConfigure.l
+                ${CMAKE_CURRENT_SOURCE_DIR}/dev/src/ztrc/ztrcConfigure.yy.c
+                COMPILE_FLAGS "--prefix=ztrcConfigure")
+SET_SOURCE_FILES_PROPERTIES(${STL_FLEX_GR_CONFIGURE_SCANNER_OUTPUTS} PROPERTIES GENERATED 1)
+
+STL_BISON_TARGET(GR_CONFIGURE_PARSER
+                 ${CMAKE_CURRENT_SOURCE_DIR}/dev/src/ztrc/ztrcConfigure.y
+                 ${CMAKE_CURRENT_SOURCE_DIR}/dev/src/ztrc/ztrcConfigure.tab.c
+                 COMPILE_FLAGS "--name-prefix=ztrcConfigure --defines=${CMAKE_CURRENT_SOURCE_DIR}/dev/include/ztrcConfigure.tab.h")
+SET_SOURCE_FILES_PROPERTIES(${STL_BISON_GR_CONFIGURE_PARSER_OUTPUTS} PROPERTIES GENERATED 1)
+
+# include directories
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_STANDARD_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_DATATYPE_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_COMMUNICATION_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_ODBC_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/dev/include)
+
+SET (EXECUTABLE_OUTPUT_PATH ${GLIESE_HOME_BIN})
+
+SET( ZTR_DIR ${PRODUCT_LAYER_GLIESETOOL_DIR}/LogMirror )
+
+AUX_SOURCE_DIRECTORY( ${ZTR_DIR}/dev/src/ztrm ZTR_MAIN_SOURCE_FILES )
+AUX_SOURCE_DIRECTORY( ${ZTR_DIR}/dev/src/ztrt ZTR_THREAD_SOURCE_FILES )
+AUX_SOURCE_DIRECTORY( ${ZTR_DIR}/dev/src/ztrs ZTR_SENDER_SOURCE_FILES )
+AUX_SOURCE_DIRECTORY( ${ZTR_DIR}/dev/src/ztrr ZTR_RECEIVER_SOURCE_FILES )
+AUX_SOURCE_DIRECTORY( ${ZTR_DIR}/dev/src/ztrf ZTR_FLUSHER_SOURCE_FILES )
+AUX_SOURCE_DIRECTORY( ${ZTR_DIR}/dev/src/ztrc ZTR_CONFIGURE_SOURCE_FILES )
+
+SET( LOGMIRROR_SOURCES_FILES ${ZTR_MAIN_SOURCE_FILES}
+                             ${ZTR_THREAD_SOURCE_FILES} 
+                             ${ZTR_SENDER_SOURCE_FILES} 
+                             ${ZTR_RECEIVER_SOURCE_FILES} 
+                             ${ZTR_FLUSHER_SOURCE_FILES}
+                             ${ZTR_FLUSHER_SOURCE_FILES}
+                             ${STL_FLEX_GR_CONFIGURE_SCANNER_OUTPUTS}
+                             ${STL_BISON_GR_CONFIGURE_PARSER_OUTPUTS} ) 
+
+IF( ${CMAKE_CPP_COMPILER} )
+    SET_SOURCE_FILES_PROPERTIES( ${LOGMIRROR_SOURCES_FILES} PROPERTIES LANGUAGE CXX )
+ENDIF()
+
+LIST(REMOVE_DUPLICATES LOGMIRROR_SOURCES_FILES)
+ADD_EXECUTABLE( logmirror ${LOGMIRROR_SOURCES_FILES} )
+
+TARGET_LINK_LIBRARIES ( logmirror ${ZLC_LIBRARY}
+                                  ${SM_LIBRARY} 
+                                  ${SC_LIBRARY} 
+                                  ${KN_LIBRARY} 
+                                  ${CM_LIBRARY} 
+                                  ${DT_LIBRARY} 
+                                  ${ST_LIBRARY} )
+
+############################################
+# PACKAGE( make package )
+############################################
+
+IF(${CMAKE_TARGET_HOST_TYPE} MATCHES "server")
+INSTALL( PROGRAMS ${GLIESE_HOME_BIN}/logmirror  DESTINATION ${INSTALL_BINDIR} )
+ENDIF()
+
+

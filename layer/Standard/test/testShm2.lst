@@ -1,0 +1,24 @@
+1. Test stlCreateShm Address(0xFFFFFFFFFFFF0000):
+  => FAIL
+2. Test stlCreateShm Address(0xFFFFFFFFFFF0000):
+  => FAIL
+3. Test stlCreateShm Address(0xFFFFFFFFFF0000):
+  => FAIL
+4. Test stlCreateShm Address(0xFFFFFFFF0000):
+  => FAIL
+5. Test stlCreateShm Address(0xFFFFFFF0000):
+  => PASS
+6. Test stlCreateShm Address(0xFFFFFF0000):
+  => PASS
+7. Test stlCreateShm Address(0xFFFFF0000):
+  => PASS
+8. Test stlCreateShm Address(0xFFFF0000):
+  => PASS
+9. Test stlCreateShm Address(0xFFF0000):
+  => PASS
+10. Test stlCreateShm Address(0xFF0000):
+  => PASS
+11. Test stlCreateShm Address(0xF0000):
+  => PASS
+12. Test stlCreateShm inter-process:
+  => PASS

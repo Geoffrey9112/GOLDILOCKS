@@ -1,0 +1,22 @@
+1. Test Normal Case
+Test stlSetEnv:
+  => PASS
+Test stlGetEnv:
+  => PASS
+Test stlDelEnv:
+  => PASS
+2. Test Abnormal Case
+Test stlSetEnv(twice):
+  => PASS
+Test stlSetEnv(Invalid argument):
+ERRCODE: 0, ERRSTRING: (null)
+ERRCODE: 4194304, ERRSTRING: Invalid argument
+ERRCODE: 4194304, ERRSTRING: Invalid argument
+  => PASS
+Test stlGetEnv(No Entry):
+ERRCODE: 4194304, ERRSTRING: Invalid argument
+  => PASS
+Test stlDelEnv(No Entry):
+  => PASS
+Test stlDelEnv(Invalid argument):
+ERRCODE: 4194304, ERRSTRING: Invalid argument

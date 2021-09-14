@@ -1,0 +1,63 @@
+/*******************************************************************************
+ * stlProduct.h
+ *
+ * Copyright (c) 2011, SUNJESOFT Inc.
+ *
+ *
+ * IDENTIFICATION & REVISION
+ *        $Id: stlProduct.h 6772 2012-12-18 09:10:39Z mkkim $
+ *
+ * NOTES
+ *    
+ *
+ ******************************************************************************/
+
+
+#ifndef _STLPRODUCT_H_
+#define _STLPRODUCT_H_ 1
+
+/**
+ * @file stlProduct.h
+ * @brief Standard Layer Product Routines
+ */
+
+
+STL_BEGIN_DECLS
+
+#define STL_COMPANY_NAME            "@COMPANY_NAME@"
+#define STL_SHORT_COMPANY_NAME      "@SHORT_COMPANY_NAME@"
+#define STL_PRODUCT_NAME            "@PRODUCT_NAME@"
+#define STL_SHORT_COMPANY_NAME      "SUNJESOFT"
+#define STL_PRODUCT_VERSION          ( "@PRODUCT_VERSION@" )
+#define STL_MAJOR_VERSION            ( @MAJOR_VERSION@ )
+#define STL_MINOR_VERSION            ( @MINOR_VERSION@ )
+#define STL_PATCH_VERSION            ( @PATCH_VERSION@ )
+#define STL_SOURCE_REVISION         "@GLIESE_WC_REVISION@"
+#define STL_SOURCE_SHORT_REVISION   "@GLIESE_WC_SHORT_REVISION@"
+#define STL_VERSION_STRING          "@PRODUCT_VERSION@.@MAJOR_VERSION@.@MINOR_VERSION@.@PATCH_VERSION@ revision(@GLIESE_WC_REVISION@)"
+#define STL_COPYRIGHT_YEAR          "2015"
+#define STL_LEGAL_COPYRIGHT         "Copyright (c) 2010, " STL_COPYRIGHT_YEAR ", " STL_COMPANY_NAME " All rights reserved."
+
+/**
+ * @defgroup stlProduct General
+ * @ingroup STL 
+ * @{
+ */
+
+void stlShowCopyright();
+
+void stlShowVersionInfo();
+
+void stlGetVersionString( stlChar * aBuffer,
+                          stlInt32  aBufferSize );
+
+void stlGetVersionInfo( stlVersionInfo * aVersionInfo );
+
+stlBool stlMatchVersion( stlVersionInfo * aVersionInfoA,
+                         stlVersionInfo * aVersionInfoB );
+
+/** @} */
+    
+STL_END_DECLS
+
+#endif /* _STLPRODUCT_H_ */

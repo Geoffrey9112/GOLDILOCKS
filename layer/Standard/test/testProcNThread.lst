@@ -1,0 +1,6 @@
+Test Thread & Process & Semaphore
+waiting ... (thread 2)
+work done (thread 2)
+waiting ... (thread 1)
+work done (thread 1)
+  => PASS

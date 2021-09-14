@@ -1,0 +1,41 @@
+/*******************************************************************************
+ * @CML_MARSHALL_SMALL_PREFIX@RowStatusDef.h
+ *
+ * Copyright (c) 2011, SUNJESOFT Inc.
+ *
+ *
+ * IDENTIFICATION & REVISION
+ *        $Id$
+ *
+ * NOTES
+ *    
+ *
+ ******************************************************************************/
+
+
+#ifndef _@CML_MARSHALL_LARGE_PREFIX@_ROW_STATUS_DEF_H_
+#define _@CML_MARSHALL_LARGE_PREFIX@_ROW_STATUS_DEF_H_ 1
+
+/**
+ * @file @CML_MARSHALL_SMALL_PREFIX@RowStatusDef.h
+ * @brief Row Status Definitions
+ */
+
+/**
+ * @defgroup @CML_MARSHALL_SMALL_PREFIX@RowStatus Row Status
+ * @{
+ */
+
+typedef enum
+{
+    @CML_MARSHALL_LARGE_PREFIX@_CURSOR_ROW_STATUS_NA        = 0, /**< N/A */
+    @CML_MARSHALL_LARGE_PREFIX@_CURSOR_ROW_STATUS_NO_CHANGE = 1, /**< NO CHANGE */
+    @CML_MARSHALL_LARGE_PREFIX@_CURSOR_ROW_STATUS_INSERTED  = 2, /**< INSERTED */
+    @CML_MARSHALL_LARGE_PREFIX@_CURSOR_ROW_STATUS_UPDATED   = 3, /**< UPDATED */
+    @CML_MARSHALL_LARGE_PREFIX@_CURSOR_ROW_STATUS_DELETED   = 4, /**< DELETED */
+    @CML_MARSHALL_LARGE_PREFIX@_CURSOR_ROW_STATUS_MAX       = 5    
+} @CML_MARSHALL_SMALL_PREFIX@CursorRowStatus;
+
+/** @} */
+
+#endif /* _@CML_MARSHALL_LARGE_PREFIX@_ROW_STATUS_DEF_H_ */

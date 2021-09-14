@@ -1,0 +1,38 @@
+/*******************************************************************************
+ * goldilocks.h
+ *
+ * Copyright (c) 2011, SUNJESOFT Inc.
+ *
+ *
+ * IDENTIFICATION & REVISION
+ *        $Id$
+ *
+ * NOTES
+ *    
+ *
+ ******************************************************************************/
+
+#ifndef _GOLDILOCKS_H_
+#define _GOLDILOCKS_H_ 1
+
+/**
+ * @file goldilocks.h
+ * @brief Gliese API Header file.
+ */
+
+@INCLUDE_WINSOCK2_H@
+@INCLUDE_WINDOWS_H@
+
+#ifndef WIN32
+#cmakedefine SIZEOF_LONG_INT @SIZEOF_LONG_INT@
+#cmakedefine HAVE_LONG_LONG  @HAVE_LONG_LONG@
+#endif
+
+#include <xa.h>
+#include <sqltypes.h>
+#include <sql.h>
+#include <sqlext.h>
+#include <goldilockstypes.h>
+#include <goldilocksxa.h>
+
+#endif /* _GOLDILOCKS_H_ */

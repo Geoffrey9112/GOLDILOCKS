@@ -1,0 +1,5 @@
+[include] internal include files
+[ssc]     command
+[ssg]     gernaral
+[ssx]     xa
+[ssl]     interface

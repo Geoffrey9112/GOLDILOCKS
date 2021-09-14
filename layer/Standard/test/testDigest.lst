@@ -1,0 +1,4 @@
+1. Digest test :abc
+  => PASS
+2. Digest test :abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq
+  => PASS

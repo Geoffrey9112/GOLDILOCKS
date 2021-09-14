@@ -1,0 +1,160 @@
+--#########################################
+--# Standard unit test
+--#########################################
+
+--#########################################
+--# INITIALIZE
+--#########################################
+
+--+MAKE testBacktrace FROM testBacktrace.c
+<<< SYSTEM : make success >>>
+--+MAKE testCM FROM testCM.c
+<<< SYSTEM : make success >>>
+--+MAKE testDigest FROM testDigest.c
+<<< SYSTEM : make success >>>
+-- +MAKE testEnv FROM testEnv.c
+-- +MAKE testFile FROM testFile.c
+--+MAKE testGetOpt FROM testGetOpt.c
+<<< SYSTEM : make success >>>
+--+MAKE testPoll FROM testPoll.c
+<<< SYSTEM : make success >>>
+-- +MAKE testProcNThread FROM testProcNThread.c
+--+MAKE testSemaphoreAbnormalCase FROM testSemaphoreAbnormalCase.c
+<<< SYSTEM : make success >>>
+--+MAKE testSemaphoreNormalCase FROM testSemaphoreNormalCase.c
+<<< SYSTEM : make success >>>
+-- +MAKE testShm FROM testShm.c
+-- +MAKE testShm2 FROM testShm2.c
+--+MAKE testSignal FROM testSignal.c
+<<< SYSTEM : make success >>>
+--+MAKE testSocket FROM testSocket.c
+<<< SYSTEM : make success >>>
+-- +MAKE testStrings FROM testStrings.c
+--+MAKE testTime FROM testTime.c
+<<< SYSTEM : make success >>>
+--+MAKE testUser FROM testUser.c
+<<< SYSTEM : make success >>>
+
+--#########################################
+--# DO JOB
+--#########################################
+
+--+EXEC testBacktrace
+PASS
+--+EXEC testCM
+1. Test communication manager : IPv4
+  => PASS
+2. Test communication manager : IPv6
+  => PASS
+3. Test communication manager : Unix domain
+  => PASS
+4. Test passing FD :
+  => PASS
+  => PASS
+--+EXEC testDigest
+1. Digest test :abc
+  => PASS
+2. Digest test :abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq
+  => PASS
+-- +EXEC testEnv
+-- +EXEC testFile
+--+EXEC testGetOpt
+PASS
+--+EXEC testPoll
+1. Test stlAddSockPollSet
+  => PASS
+2. Test stlRemoveSockPollSet
+  => PASS
+3. Test stlPoll & stlPollPollSet
+ERRORIGIN: testPoll.c(240)
+ERRNO: 98, ERRCODE: 11077, ERRSTRING: given address is already in use
+ERRNO: 0, ERRCODE: 11040, ERRSTRING: No such object ()
+  => FAIL
+-- +EXEC testProcNThread
+--+EXEC testSemaphoreAbnormalCase
+Test stlCreateSemaphore(name too long):
+ERRCODE: 11028, ERRSTRING: The given name(AAAAAAAA) is too long
+  => PASS
+Test stlTryAcquireSemaphore(twice):
+ERRCODE: 11028, ERRSTRING: The given name(AAAAAAAA) is too long
+  => PASS
+Test stlTimedAcquireSemaphore(twice):
+ERRCODE: 11028, ERRSTRING: The given name(AAAAAAAA) is too long
+  => PASS
+Test stlReleaseSemaphore(1 release => 2 acquire):
+  => PASS
+--+EXEC testSemaphoreNormalCase
+ P1 Process
+ P2 Process
+ Main Process
+-- +EXEC testShm
+-- +EXEC testShm2
+--+EXEC testSignal
+Test stlKillProc:
+received signal
+  => PASS
+Test stlBlockProc:
+  => PASS
+Test stlUnblockProc:
+received signal
+  => PASS
+--+EXEC testSocket
+Start IPv4 Test...
+Server Failed with ErrorCode(11077)sState(2)Start IPv6 Test...
+Server Failed with ErrorCode(11077)sState(2)Start Unix Domain Test...
+Client received message 'Hwarang'
+Returned message is 'Dambae'
+Start Unix Domain Stream Test...
+Client received message 'Hwarang'
+Returned message is 'Dambae'
+-- +EXEC testStrings
+--+EXEC testTime
+PASS
+--+EXEC testUser
+1. Test User
+  => PASS
+2. Test Group
+  => PASS
+3. Test Abnormal User
+ERRCODE: 11040, ERRSTRING: No such object (@@@@@@@@)
+ERRCODE: 11027, ERRSTRING: Truncation occurred on I/O operation
+ERRCODE: 11027, ERRSTRING: Truncation occurred on I/O operation
+  => PASS
+4. Test Abnormal Group
+ERRCODE: 11040, ERRSTRING: No such object (@@@@@@@@)
+ERRCODE: 11027, ERRSTRING: Truncation occurred on I/O operation
+  => PASS
+
+--#########################################
+--# FINALIZE
+--#########################################
+
+--+REMOVE testBacktrace
+<<< SYSTEM : removing file(testBacktrace) success >>>
+--+REMOVE testCM
+<<< SYSTEM : removing file(testCM) success >>>
+--+REMOVE testDigest
+<<< SYSTEM : removing file(testDigest) success >>>
+-- +REMOVE testEnv
+-- +REMOVE testFile
+--+REMOVE testGetOpt
+<<< SYSTEM : removing file(testGetOpt) success >>>
+--+REMOVE testPoll
+<<< SYSTEM : removing file(testPoll) success >>>
+-- +REMOVE testProcNThread
+--+REMOVE testSemaphoreAbnormalCase
+<<< SYSTEM : removing file(testSemaphoreAbnormalCase) success >>>
+--+REMOVE testSemaphoreNormalCase
+<<< SYSTEM : removing file(testSemaphoreNormalCase) success >>>
+-- +REMOVE testShm
+-- +REMOVE testShm2
+--+REMOVE testSignal
+<<< SYSTEM : removing file(testSignal) success >>>
+--+REMOVE testSocket
+<<< SYSTEM : removing file(testSocket) success >>>
+-- +REMOVE testStrings
+--+REMOVE testTime
+<<< SYSTEM : removing file(testTime) success >>>
+--+REMOVE testUser
+<<< SYSTEM : removing file(testUser) success >>>
+

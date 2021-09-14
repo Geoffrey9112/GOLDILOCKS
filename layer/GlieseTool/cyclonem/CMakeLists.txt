@@ -1,0 +1,159 @@
+CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
+
+
+SET( SML_MARSHALL_SMALL_PREFIX "ztc" )
+SET( SML_MARSHALL_LARGE_PREFIX "ZTC" )
+
+CONFIGURE_FILE(${PRODUCT_LAYER_STORAGEMANAGER_DIR}/dev/include/smlLogDef.h.in
+               ${CMAKE_CURRENT_SOURCE_DIR}/dev/include/${SML_MARSHALL_SMALL_PREFIX}LogDef.h)
+
+CONFIGURE_FILE(${PRODUCT_LAYER_STORAGEMANAGER_DIR}/dev/include/smlSuppLogDef.h.in
+               ${CMAKE_CURRENT_SOURCE_DIR}/dev/include/${SML_MARSHALL_SMALL_PREFIX}SuppLogDef.h)   
+
+CONFIGURE_FILE(${PRODUCT_LAYER_STORAGEMANAGER_DIR}/dev/include/smlRowDef.h.in
+               ${CMAKE_CURRENT_SOURCE_DIR}/dev/include/${SML_MARSHALL_SMALL_PREFIX}RowDef.h)
+
+CONFIGURE_FILE(${PRODUCT_LAYER_STORAGEMANAGER_DIR}/dev/include/smlColumnDef.h.in
+               ${CMAKE_CURRENT_SOURCE_DIR}/dev/include/${SML_MARSHALL_SMALL_PREFIX}ColumnDef.h)
+
+CONFIGURE_FILE(${PRODUCT_LAYER_STORAGEMANAGER_DIR}/dev/include/smlClassDef.h.in
+               ${CMAKE_CURRENT_SOURCE_DIR}/dev/include/${SML_MARSHALL_SMALL_PREFIX}ClassDef.h)
+
+SET( ELL_MARSHALL_SMALL_PREFIX "ztc" )
+SET( ELL_MARSHALL_LARGE_PREFIX "ZTC" )
+
+CONFIGURE_FILE(${PRODUCT_LAYER_EXECUTIONLIBRARY_DIR}/dev/include/ellSuppLogDef.h.in
+               ${CMAKE_CURRENT_SOURCE_DIR}/dev/include/${ELL_MARSHALL_SMALL_PREFIX}DdlSuppLogDef.h)
+
+
+#set the Standard Library
+SET (ST_LIBRARY st)
+LINK_DIRECTORIES (${PRODUCT_LAYER_STANDARD_DIR}/dev/lib)
+
+#set the DataType Library
+SET (DT_LIBRARY dt)
+LINK_DIRECTORIES (${PRODUCT_LAYER_DATATYPE_DIR}/dev/lib)
+
+#set the Communication Library
+SET (CM_LIBRARY cm)
+LINK_DIRECTORIES (${PRODUCT_LAYER_COMMUNICATION_DIR}/dev/lib)
+
+#set the Kernel Library
+SET (KN_LIBRARY kn)
+LINK_DIRECTORIES (${PRODUCT_LAYER_KERNEL_DIR}/dev/lib)
+
+#set the Server Communication Library
+SET (SC_LIBRARY sc)
+LINK_DIRECTORIES (${PRODUCT_LAYER_SERVERCOMMUNICATION_DIR}/dev/lib)
+
+#set the Storage Library
+SET (SM_LIBRARY sm)
+LINK_DIRECTORIES (${PRODUCT_LAYER_STORAGEMANAGER_DIR}/dev/lib)
+
+#set the Execution Library
+SET (EL_LIBRARY el)
+LINK_DIRECTORIES (${PRODUCT_LAYER_EXECUTIONLIBRARY_DIR}/dev/lib)
+
+#set the SQL Processor Library
+SET (QP_LIBRARY qp)
+LINK_DIRECTORIES (${PRODUCT_LAYER_SQLPROCESSOR_DIR}/dev/lib)
+
+#set the Session Library
+SET (SS_LIBRARY ss)
+LINK_DIRECTORIES (${PRODUCT_LAYER_SESSION_DIR}/dev/lib)
+
+#set the Server Library
+SET (SL_LIBRARY sl)
+LINK_DIRECTORIES (${PRODUCT_LAYER_SERVERLIBRARY_DIR}/dev/lib)
+
+#set the Gliese Library
+SET (ZLA_LIBRARY zla)
+LINK_DIRECTORIES (${PRODUCT_LAYER_ODBC_DIR}/dev/lib)
+
+#set the gliesec Library 
+SET (ZLC_LIBRARY zlc)
+LINK_DIRECTORIES (${PRODUCT_LAYER_ODBC_DIR}/dev/lib)
+
+#set the glieses Library 
+SET (ZL_LIBRARY zl)
+LINK_DIRECTORIES (${PRODUCT_LAYER_ODBC_DIR}/dev/lib)
+
+STL_FLEX_TARGET(GR_CONFIGURE_SCANNER
+                ${CMAKE_CURRENT_SOURCE_DIR}/dev/src/ztcf/ztcfConfigure.l
+                ${CMAKE_CURRENT_SOURCE_DIR}/dev/src/ztcf/ztcfConfigure.yy.c
+                COMPILE_FLAGS "--prefix=ztcfConfigure")
+SET_SOURCE_FILES_PROPERTIES(${STL_FLEX_GR_CONFIGURE_SCANNER_OUTPUTS} PROPERTIES GENERATED 1)
+
+STL_BISON_TARGET(GR_CONFIGURE_PARSER
+                 ${CMAKE_CURRENT_SOURCE_DIR}/dev/src/ztcf/ztcfConfigure.y
+                 ${CMAKE_CURRENT_SOURCE_DIR}/dev/src/ztcf/ztcfConfigure.tab.c
+                 COMPILE_FLAGS "--name-prefix=ztcfConfigure --defines=${CMAKE_CURRENT_SOURCE_DIR}/dev/include/ztcfConfigure.tab.h")
+SET_SOURCE_FILES_PROPERTIES(${STL_BISON_GR_CONFIGURE_PARSER_OUTPUTS} PROPERTIES GENERATED 1)
+
+# include directories
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_STANDARD_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_DATATYPE_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_COMMUNICATION_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_ODBC_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/dev/include)
+
+SET (EXECUTABLE_OUTPUT_PATH ${GLIESE_HOME_BIN})
+
+AUX_SOURCE_DIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/dev/src/ztcm ZTC_MAIN_SOURCE_FILES)
+AUX_SOURCE_DIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/dev/src/ztct ZTC_THREADS_SOURCE_FILES)
+AUX_SOURCE_DIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/dev/src/ztcc ZTC_CAPTURE_SOURCE_FILES)
+AUX_SOURCE_DIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/dev/src/ztcs ZTC_SENDER_SOURCE_FILES)
+AUX_SOURCE_DIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/dev/src/ztcr ZTC_RECEIVER_SOURCE_FILES)
+AUX_SOURCE_DIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/dev/src/ztcb ZTC_DISTRIBUTOR_SOURCE_FILES)
+AUX_SOURCE_DIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/dev/src/ztca ZTC_APPLIER_SOURCE_FILES)
+AUX_SOURCE_DIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/dev/src/ztcd ZTC_CONNECTION_SOURCE_FILES)
+AUX_SOURCE_DIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/dev/src/ztcf ZTC_CONFIGURE_SOURCE_FILES)
+AUX_SOURCE_DIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/dev/src/ztcn ZTC_SYNC_SOURCE_FILES)
+
+SET( CYCLONEM_SOURCES_FILES ${ZTC_MAIN_SOURCE_FILES}
+                           ${ZTC_THREADS_SOURCE_FILES}  
+                           ${ZTC_CAPTURE_SOURCE_FILES} 
+                           ${ZTC_SENDER_SOURCE_FILES} 
+                           ${ZTC_RECEIVER_SOURCE_FILES} 
+                           ${ZTC_DISTRIBUTOR_SOURCE_FILES}
+                           ${ZTC_APPLIER_SOURCE_FILES}
+                           ${ZTC_CONNECTION_SOURCE_FILES}
+                           ${ZTC_CONFIGURE_SOURCE_FILES}
+                           ${ZTC_SYNC_SOURCE_FILES}
+                           ${STL_FLEX_GR_CONFIGURE_SCANNER_OUTPUTS}
+                           ${STL_BISON_GR_CONFIGURE_PARSER_OUTPUTS} ) 
+
+IF( ${CMAKE_CPP_COMPILER} )
+    SET_SOURCE_FILES_PROPERTIES( ${CYCLONEM_SOURCES_FILES} PROPERTIES LANGUAGE CXX )
+ENDIF()
+
+LIST(REMOVE_DUPLICATES CYCLONEM_SOURCES_FILES)
+ADD_EXECUTABLE( cyclonem ${CYCLONEM_SOURCES_FILES})
+
+TARGET_LINK_LIBRARIES( cyclonem ${ZL_LIBRARY}
+                                ${SL_LIBRARY}
+                                ${SS_LIBRARY}
+                                ${QP_LIBRARY}
+                                ${EL_LIBRARY} 
+                                ${SM_LIBRARY} 
+                                ${SC_LIBRARY} 
+                                ${KN_LIBRARY} 
+                                ${CM_LIBRARY} 
+                                ${DT_LIBRARY} 
+                                ${ST_LIBRARY} )
+                               
+#ADD_EXECUTABLE( cyclonetm ${CYCLONE_SOURCES_FILES})
+
+#TARGET_LINK_LIBRARIES ( cyclonetm ${ZLC_LIBRARY}
+#                                  ${CM_LIBRARY} 
+#                                  ${DT_LIBRARY} 
+#                                  ${ST_LIBRARY} )
+
+############################################
+# PACKAGE( make package )
+############################################
+
+IF(${CMAKE_TARGET_HOST_TYPE} MATCHES "server")
+INSTALL( PROGRAMS ${GLIESE_HOME_BIN}/cyclonem  DESTINATION ${INSTALL_BINDIR} )
+#INSTALL( PROGRAMS ${GLIESE_HOME_BIN}/cyclonetm DESTINATION ${INSTALL_BINDIR} )
+ENDIF()

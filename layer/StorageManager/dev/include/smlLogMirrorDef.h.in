@@ -1,0 +1,64 @@
+/*******************************************************************************
+ * @SML_MARSHALL_SMALL_PREFIX@LogMirrorDef.h
+ *
+ * Copyright (c) 2011, SUNJESOFT Inc.
+ *
+ *
+ * IDENTIFICATION & REVISION
+ *        $Id:  $
+ *
+ * NOTES
+ *    
+ *
+ ******************************************************************************/
+
+
+#ifndef _@SML_MARSHALL_LARGE_PREFIX@LOGMIRRORDEF_H_
+#define _@SML_MARSHALL_LARGE_PREFIX@LOGMIRRORDEF_H_ 1
+
+/**
+ * @file @SML_MARSHALL_SMALL_PREFIX@LogMirrorDef.h
+ * @brief LogMirror Specification Definitions
+ */
+
+/**
+ * @brief LOGMIRROR 운영시 사용됨
+ */
+#define @SML_MARSHALL_LARGE_PREFIX@_LOGMIRROR_DEFAULT_SHM_NAME   "_LGMIR"
+#define @SML_MARSHALL_LARGE_PREFIX@_LOGMIRROR_BUFF_OFFSET        ( 512 )
+
+#define @SML_MARSHALL_LARGE_PREFIX@_LOGMIRROR_INVALID_IDX        ( 0 )
+
+#define @SML_MARSHALL_LARGE_PREFIX@_LOGMIRROR_CONNECTED          ( 1 )
+#define @SML_MARSHALL_LARGE_PREFIX@_LOGMIRROR_DISCONNECTED       ( 0 )
+
+#define @SML_MARSHALL_LARGE_PREFIX@_LOGMIRROR_STARTED            ( 1 )
+#define @SML_MARSHALL_LARGE_PREFIX@_LOGMIRROR_NOT_STARTED        ( 0 )
+
+
+typedef struct @SML_MARSHALL_SMALL_PREFIX@LogMirrorInfo
+{
+    stlSemaphore     mWaitDataSem;          //LogMirror Buffer에 데이터를 기다리는 Semaphore
+    stlSemaphore     mWaitSendSem;          //LogMirror가 나눠진 데이터를 보냈는지 기다리는 Semaphore
+    stlUInt64        mWriteSeq;
+    stlUInt64        mSendSeq;
+    stlInt64         mSize;
+    stlUInt32        mSpinLock;
+    stlInt32         mConnected;
+    stlInt32         mIsStarted;
+} @SML_MARSHALL_SMALL_PREFIX@LogMirrorInfo;
+
+typedef struct @SML_MARSHALL_SMALL_PREFIX@LogMirrorHdr
+{
+    stlInt32       mCategory;
+    stlInt32       mType;
+    stlInt64       mSize;
+    stlInt64       mWriteSeq;
+    stlInt32       mCurrentPiece;
+    stlInt32       mTotalPiece;
+    stlBool        mIsLogFileHdr;
+    stlChar        mPadding[7];
+} @SML_MARSHALL_SMALL_PREFIX@LogMirrorHdr;
+
+
+#endif /* _@SML_MARSHALL_LARGE_PREFIX@LOGMIRRORDEF_H_ */

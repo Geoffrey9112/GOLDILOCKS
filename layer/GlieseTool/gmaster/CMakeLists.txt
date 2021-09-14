@@ -1,0 +1,93 @@
+CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
+
+#set the Standard Library
+SET (ST_LIBRARY st)
+LINK_DIRECTORIES (${PRODUCT_LAYER_STANDARD_DIR}/dev/lib)
+
+#set the DataType Library
+SET (DT_LIBRARY dt)
+LINK_DIRECTORIES (${PRODUCT_LAYER_DATATYPE_DIR}/dev/lib)
+
+#set the Communication Library
+SET (CM_LIBRARY cm)
+LINK_DIRECTORIES (${PRODUCT_LAYER_COMMUNICATION_DIR}/dev/lib)
+
+#set the Kernel Library
+SET (KN_LIBRARY kn)
+LINK_DIRECTORIES (${PRODUCT_LAYER_KERNEL_DIR}/dev/lib)
+
+#set the Server Communication Library
+SET (SC_LIBRARY sc)
+LINK_DIRECTORIES (${PRODUCT_LAYER_SERVERCOMMUNICATION_DIR}/dev/lib)
+
+#set the Storage Library
+SET (SM_LIBRARY sm)
+LINK_DIRECTORIES (${PRODUCT_LAYER_STORAGEMANAGER_DIR}/dev/lib)
+
+#set the Execution Library
+SET (EL_LIBRARY el)
+LINK_DIRECTORIES (${PRODUCT_LAYER_EXECUTIONLIBRARY_DIR}/dev/lib)
+
+#set the Query Processor
+SET (QP_LIBRARY qp)
+LINK_DIRECTORIES (${PRODUCT_LAYER_SQLPROCESSOR_DIR}/dev/lib)
+
+#set the Session Library
+SET (SS_LIBRARY ss)
+LINK_DIRECTORIES (${PRODUCT_LAYER_SESSION_DIR}/dev/lib)
+
+#set the Session Library
+SET (SL_LIBRARY sl)
+LINK_DIRECTORIES (${PRODUCT_LAYER_SERVERLIBRARY_DIR}/dev/lib)
+
+#set the Session Library
+SET (SL_LIBRARY sl)
+LINK_DIRECTORIES (${PRODUCT_LAYER_SERVERLIBRARY_DIR}/dev/lib)
+
+# include directories
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_STANDARD_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_DATATYPE_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_COMMUNICATION_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_KERNEL_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_SERVERCOMMUNICATION_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_STORAGEMANAGER_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_EXECUTIONLIBRARY_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_SQLPROCESSOR_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_SESSION_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_SERVERLIBRARY_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/dev/src/include)
+
+SET (EXECUTABLE_OUTPUT_PATH ${GLIESE_HOME_BIN})
+
+AUX_SOURCE_DIRECTORY(dev/src/ztmb ZTM_BOOT_SOURCE_FILES)
+AUX_SOURCE_DIRECTORY(dev/src/ztmm ZTM_MAIN_SOURCE_FILES)
+AUX_SOURCE_DIRECTORY(dev/src/ztmt ZTM_THREADS_SOURCE_FILES)
+
+SET( ZTM_SOURCES_FILES ${ZTM_BOOT_SOURCE_FILES}
+                       ${ZTM_MAIN_SOURCE_FILES}
+                       ${ZTM_THREADS_SOURCE_FILES} )
+
+IF( ${CMAKE_CPP_COMPILER} )
+    SET_SOURCE_FILES_PROPERTIES( ${ZTM_SOURCE_FILES} PROPERTIES LANGUAGE CXX )
+ENDIF()
+
+ADD_EXECUTABLE( gmaster ${ZTM_BOOT_SOURCE_FILES}
+                        ${ZTM_MAIN_SOURCE_FILES}
+                        ${ZTM_THREADS_SOURCE_FILES} )
+
+TARGET_LINK_LIBRARIES( gmaster ${SL_LIBRARY}
+                               ${SS_LIBRARY}
+                               ${QP_LIBRARY}
+                               ${EL_LIBRARY} 
+                               ${SM_LIBRARY} 
+                               ${SC_LIBRARY} 
+                               ${KN_LIBRARY} 
+                               ${CM_LIBRARY} 
+                               ${DT_LIBRARY} 
+                               ${ST_LIBRARY} )
+
+############################################
+# PACKAGE( make package )
+############################################
+
+INSTALL( PROGRAMS ${GLIESE_HOME_BIN}/gmaster DESTINATION ${INSTALL_BINDIR} )

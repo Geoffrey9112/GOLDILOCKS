@@ -1,0 +1,65 @@
+/*******************************************************************************
+ * @SML_MARSHALL_SMALL_PREFIX@ColumnDef.h
+ *
+ * Copyright (c) 2011, SUNJESOFT Inc.
+ *
+ *
+ * IDENTIFICATION & REVISION
+ *        $Id: smlColumnDef.h.in 5578 2012-09-13 07:05:25Z mkkim $
+ *
+ * NOTES
+ *    
+ *
+ ******************************************************************************/
+
+
+#ifndef _@SML_MARSHALL_LARGE_PREFIX@COLUMNDEF_H_
+#define _@SML_MARSHALL_LARGE_PREFIX@COLUMNDEF_H_ 1
+
+/**
+ * @file @SML_MARSHALL_SMALL_PREFIX@ColumnDef.h
+ * @brief Column Specification Definitions
+ */
+
+/*==========================================================*/
+/* Variable Column Lenth 저장                               */
+/*==========================================================*/
+
+#define @SML_MARSHALL_LARGE_PREFIX@_COLUMN_LEN_ZERO            ((stlUInt8)0xFE)
+#define @SML_MARSHALL_LARGE_PREFIX@_COLUMN_LEN_2BYTE_FLAG      ((stlUInt8)0xFD)
+#define @SML_MARSHALL_LARGE_PREFIX@_COLUMN_CONT_FLAG           ((stlUInt8)0xFC)  /**< columnar table use only */
+#define @SML_MARSHALL_LARGE_PREFIX@_COLUMN_LEN_1BYTE_MAX       ((stlUInt8)0xFB)  /**< (2^8) - 4 */
+#define @SML_MARSHALL_LARGE_PREFIX@_COLUMN_LEN_2BYTE_MAX       (STL_UINT16_MAX)  /**< 2^16 */ 
+#define @SML_MARSHALL_LARGE_PREFIX@_COLUMN_LEN_4BYTE_MAX       (STL_UINT32_MAX)  /**< 2^32 */ 
+
+/**
+ * @brief 주어진 위치에 저장된 컬럼의 길이정보 field의 크기와 컬럼 data의 길이를 반환한다
+ */
+#define @SML_MARSHALL_LARGE_PREFIX@_GET_COLUMN_LEN( aColPtr, aColLenSize, aColLen, aIsZero )             \
+    {                                                                                                    \
+        aIsZero = STL_FALSE;                                                                             \
+        if( STL_EXPECT_TRUE(*(stlUInt8*)(aColPtr) <= @SML_MARSHALL_LARGE_PREFIX@_COLUMN_LEN_1BYTE_MAX) ) \
+        {                                                                                                \
+            *(aColLenSize) = 1;                                                                          \
+            *(aColLen) = *(stlUInt8*)(aColPtr);                                                          \
+        }                                                                                                \
+        else                                                                                             \
+        {                                                                                                \
+            stlUInt16 tmpInt16;                                                                          \
+                                                                                                         \
+            if( *(stlUInt8*)(aColPtr) == @SML_MARSHALL_LARGE_PREFIX@_COLUMN_LEN_ZERO )                   \
+            {                                                                                            \
+                *(aColLenSize) = 1;                                                                      \
+                *(aColLen) = 0;                                                                          \
+                aIsZero = STL_TRUE;                                                                      \
+            }                                                                                            \
+            else                                                                                         \
+            {                                                                                            \
+                STL_WRITE_INT16(&tmpInt16, (stlChar*)(aColPtr) + 1);                                     \
+                *(aColLen) = (stlInt64)tmpInt16;                                                         \
+                *(aColLenSize) = 3;                                                                      \
+            }                                                                                            \
+        }                                                                                                \
+    }
+
+#endif /* _@SML_MARSHALL_LARGE_PREFIX@COLUMNDEF_H_ */

@@ -1,0 +1,27 @@
+#include <winver.h>
+#include <stlProduct.h>
+
+VS_VERSION_INFO     VERSIONINFO
+  FILEVERSION       STL_MAJOR_VERSION,STL_MINOR_VERSION,STL_PATCH_VERSION
+  PRODUCTVERSION    STL_MAJOR_VERSION,STL_MINOR_VERSION,STL_PATCH_VERSION
+  FILEFLAGSMASK     VS_FFI_FILEFLAGSMASK
+  FILEOS            VOS_NT_WINDOWS32
+  FILETYPE          VFT_DLL
+  FILESUBTYPE       VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName",     STL_COMPANY_NAME
+            VALUE "FileVersion",     STL_VERSION_STRING
+            VALUE "LegalCopyright",  STL_LEGAL_COPYRIGHT
+            VALUE "ProductName",     STL_PRODUCT_NAME
+            VALUE "ProductVersion",  STL_VERSION_STRING
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END

@@ -1,0 +1,48 @@
+/*******************************************************************************
+ * @SML_MARSHALL_SMALL_PREFIX@ClassDef.h
+ *
+ * Copyright (c) 2011, SUNJESOFT Inc.
+ *
+ *
+ * IDENTIFICATION & REVISION
+ *        $Id: smlClassDef.h.in 5578 2012-09-13 07:05:25Z mkkim $
+ *
+ * NOTES
+ *    
+ *
+ ******************************************************************************/
+
+
+#ifndef _@SML_MARSHALL_LARGE_PREFIX@CLASSDEF_H_
+#define _@SML_MARSHALL_LARGE_PREFIX@CLASSDEF_H_ 1
+
+/**
+ * @file @SML_MARSHALL_SMALL_PREFIX@ClassDef.h
+ * @brief Component Class Specification Definitions
+ */
+
+/**
+ * @defgroup @SML_MARSHALL_SMALL_PREFIX@ClassType Component Class Type
+ * @{
+ */
+
+#define @SML_MARSHALL_LARGE_PREFIX@_COMPONENT_DATAFILE       0   /**< Datafile Component */
+#define @SML_MARSHALL_LARGE_PREFIX@_COMPONENT_PAGE_ACCESS    1   /**< Page Access Component */
+#define @SML_MARSHALL_LARGE_PREFIX@_COMPONENT_TABLESPACE     2   /**< Tablespace Component */
+#define @SML_MARSHALL_LARGE_PREFIX@_COMPONENT_GENERAL        3   /**< General Component */
+#define @SML_MARSHALL_LARGE_PREFIX@_COMPONENT_RECOVERY       4   /**< Recovery Component */
+#define @SML_MARSHALL_LARGE_PREFIX@_COMPONENT_SEGMENT        5   /**< Segment Component */
+#define @SML_MARSHALL_LARGE_PREFIX@_COMPONENT_TRANSACTION    6   /**< Transaction Component */
+#define @SML_MARSHALL_LARGE_PREFIX@_COMPONENT_LOCK           7   /**< Lock Component */
+#define @SML_MARSHALL_LARGE_PREFIX@_COMPONENT_RELATION       8   /**< Relation Component */
+#define @SML_MARSHALL_LARGE_PREFIX@_COMPONENT_TABLE          9   /**< Table Component */
+#define @SML_MARSHALL_LARGE_PREFIX@_COMPONENT_INDEX         10   /**< Index Component */
+#define @SML_MARSHALL_LARGE_PREFIX@_COMPONENT_SEQUENCE      11   /**< Sequence Component */
+#define @SML_MARSHALL_LARGE_PREFIX@_COMPONENT_EXTERNAL      12   /**< external component */
+#define @SML_MARSHALL_LARGE_PREFIX@_COMPONENT_TEST          13   /**< Test Component */
+#define @SML_MARSHALL_LARGE_PREFIX@_COMPONENT_MAX           14
+
+
+/** @} */
+
+#endif /* _@SML_MARSHALL_LARGE_PREFIX@CLASSDEF_H_ */

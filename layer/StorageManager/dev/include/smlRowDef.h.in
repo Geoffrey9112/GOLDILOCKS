@@ -1,0 +1,167 @@
+/*******************************************************************************
+ * @SML_MARSHALL_SMALL_PREFIX@RowDef.h
+ *
+ * Copyright (c) 2011, SUNJESOFT Inc.
+ *
+ *
+ * IDENTIFICATION & REVISION
+ *        $Id: smlRowDef.h.in 5578 2012-09-13 07:05:25Z mkkim $
+ *
+ * NOTES
+ *    
+ *
+ ******************************************************************************/
+
+
+#ifndef _@SML_MARSHALL_LARGE_PREFIX@ROWDEF_H_
+#define _@SML_MARSHALL_LARGE_PREFIX@ROWDEF_H_ 1
+
+/**
+ * @file @SML_MARSHALL_SMALL_PREFIX@RowDef.h
+ * @brief Row Specification Definitions
+ */
+
+/** ROW FLAGS */
+#define  @SML_MARSHALL_LARGE_PREFIX@_FLAG_DELETED            (0x80)
+#define  @SML_MARSHALL_LARGE_PREFIX@_FLAG_IS_MASTER          (0x40)
+#define  @SML_MARSHALL_LARGE_PREFIX@_FLAG_IS_CONT_COL_LAST   (0x20)
+#define  @SML_MARSHALL_LARGE_PREFIX@_FLAG_IS_CONT_COL        (0x10)
+#define  @SML_MARSHALL_LARGE_PREFIX@_FLAG_IS_LOCKED          (0x08)
+#define  @SML_MARSHALL_LARGE_PREFIX@_FLAG_IS_RTS_BOUND       (0x04)
+#define  @SML_MARSHALL_LARGE_PREFIX@_FLAG_HAS_NEXT_LINK      (0x02)
+#define  @SML_MARSHALL_LARGE_PREFIX@_FLAG_IN_USE             (0x01)
+#define  @SML_MARSHALL_LARGE_PREFIX@_INIT_ROW_HDR_BITMAP( aRow )    \
+{                                                                   \
+    *((stlChar*)(aRow)) = 0;                                        \
+}
+
+/** ROW OFFSET & LENGTHs
+ * <BR>
+ * @brief ROW SLOT STRUCTURE specification
+ * <BR>
+ * <BR> ---------------------------------
+ * <BR>  FIELD           | OFFSET | BYTE
+ * <BR> ---------------------------------
+ * <BR>  FLAG            |    0   |   1
+ * <BR> ---------------------------------
+ * <BR>  TCN             |    1   |   4
+ * <BR> ---------------------------------
+ * <BR>  SCN             |    5   |   8
+ * <BR> ---------------------------------
+ * <BR>  TRANS_ID        |   13   |   8
+ * <BR> ---------------------------------
+ * <BR>  ROLLBACK PID    |   21   |   4
+ * <BR> ---------------------------------
+ * <BR>  ROLLBACK OFFSET |   25   |   2
+ * <BR> ---------------------------------
+ * <BR>  COLUMN COUNT    |   27   |   2
+ * <BR> ---------------------------------
+ * <BR>  PAD SPACE       |   29   |   2
+ * <BR> ---------------------------------
+ */
+#define  @SML_MARSHALL_LARGE_PREFIX@_OFFSET_TCN \
+    (STL_SIZEOF(stlChar))
+#define  @SML_MARSHALL_LARGE_PREFIX@_LEN_TCN    \
+    (STL_SIZEOF(stlInt32))
+#define  @SML_MARSHALL_LARGE_PREFIX@_OFFSET_SCN_RTSSEQ                              \
+    (@SML_MARSHALL_LARGE_PREFIX@_OFFSET_TCN + @SML_MARSHALL_LARGE_PREFIX@_LEN_TCN)
+#define  @SML_MARSHALL_LARGE_PREFIX@_LEN_SCN_RTSSEQ \
+    (STL_SIZEOF(stlInt64))
+#define  @SML_MARSHALL_LARGE_PREFIX@_OFFSET_TRANS_ID                                                \
+    (@SML_MARSHALL_LARGE_PREFIX@_OFFSET_SCN_RTSSEQ + @SML_MARSHALL_LARGE_PREFIX@_LEN_SCN_RTSSEQ)
+#define  @SML_MARSHALL_LARGE_PREFIX@_LEN_TRANS_ID   \
+    (STL_SIZEOF(stlInt64))
+#define  @SML_MARSHALL_LARGE_PREFIX@_OFFSET_ROLLBACK_PID                                        \
+    (@SML_MARSHALL_LARGE_PREFIX@_OFFSET_TRANS_ID + @SML_MARSHALL_LARGE_PREFIX@_LEN_TRANS_ID)
+#define  @SML_MARSHALL_LARGE_PREFIX@_LEN_ROLLBACK_PID   \
+    (STL_SIZEOF(stlUInt32))
+#define  @SML_MARSHALL_LARGE_PREFIX@_OFFSET_ROLLBACK_OFFSET                                         \
+    (@SML_MARSHALL_LARGE_PREFIX@_OFFSET_ROLLBACK_PID + @SML_MARSHALL_LARGE_PREFIX@_LEN_ROLLBACK_PID)
+#define  @SML_MARSHALL_LARGE_PREFIX@_LEN_ROLLBACK_OFFSET    \
+    (STL_SIZEOF(stlInt16))
+#define  @SML_MARSHALL_LARGE_PREFIX@_OFFSET_COLUMN_CNT                                              \
+    (@SML_MARSHALL_LARGE_PREFIX@_OFFSET_ROLLBACK_OFFSET + @SML_MARSHALL_LARGE_PREFIX@_LEN_ROLLBACK_OFFSET)
+#define  @SML_MARSHALL_LARGE_PREFIX@_LEN_COLUMN_CNT \
+    (STL_SIZEOF(stlInt16))
+#define  @SML_MARSHALL_LARGE_PREFIX@_OFFSET_PAD_SPACE                                               \
+    (@SML_MARSHALL_LARGE_PREFIX@_OFFSET_COLUMN_CNT + @SML_MARSHALL_LARGE_PREFIX@_LEN_COLUMN_CNT)
+#define  @SML_MARSHALL_LARGE_PREFIX@_LEN_PAD_SPACE  \
+    (STL_SIZEOF(stlInt16))
+#define  @SML_MARSHALL_LARGE_PREFIX@_OFFSET_LINK_PID                                        \
+    (@SML_MARSHALL_LARGE_PREFIX@_OFFSET_PAD_SPACE + @SML_MARSHALL_LARGE_PREFIX@_LEN_PAD_SPACE)
+#define  @SML_MARSHALL_LARGE_PREFIX@_LEN_LINK_PID   \
+    (STL_SIZEOF(stlUInt32))
+#define  @SML_MARSHALL_LARGE_PREFIX@_OFFSET_LINK_OFFSET                                     \
+    (@SML_MARSHALL_LARGE_PREFIX@_OFFSET_LINK_PID + @SML_MARSHALL_LARGE_PREFIX@_LEN_LINK_PID)
+#define  @SML_MARSHALL_LARGE_PREFIX@_LEN_LINK_OFFSET    \
+    (STL_SIZEOF(stlInt16))
+
+#define  @SML_MARSHALL_LARGE_PREFIX@_MIN_ROW_HDR_LEN                                        \
+    (@SML_MARSHALL_LARGE_PREFIX@_OFFSET_PAD_SPACE + @SML_MARSHALL_LARGE_PREFIX@_LEN_PAD_SPACE)
+#define  @SML_MARSHALL_LARGE_PREFIX@_MAX_ROW_HDR_LEN                                            \
+    (@SML_MARSHALL_LARGE_PREFIX@_OFFSET_LINK_OFFSET + @SML_MARSHALL_LARGE_PREFIX@_LEN_LINK_OFFSET)
+#define  @SML_MARSHALL_LARGE_PREFIX@_MINIMUM_ROW_PIECE_SIZE \
+    (@SML_MARSHALL_LARGE_PREFIX@_MAX_ROW_HDR_LEN)
+
+#define  @SML_MARSHALL_LARGE_PREFIX@_GET_ROW_HDR_SIZE( aRow, aRowHdrSize )                \
+{                                                                    \
+    *(aRowHdrSize) = (@SML_MARSHALL_LARGE_PREFIX@_HAS_NEXT_LINK( (aRow) ) == STL_TRUE) ?  \
+    @SML_MARSHALL_LARGE_PREFIX@_MAX_ROW_HDR_LEN : @SML_MARSHALL_LARGE_PREFIX@_MIN_ROW_HDR_LEN;                 \
+}
+
+/** ROW FIELD INTERFACES */
+#define  @SML_MARSHALL_LARGE_PREFIX@_IS_DELETED(aRow)                       \
+    ( (((*(stlChar*)(aRow)) & @SML_MARSHALL_LARGE_PREFIX@_FLAG_DELETED) ==  \
+       @SML_MARSHALL_LARGE_PREFIX@_FLAG_DELETED) ?                          \
+      STL_TRUE : STL_FALSE )
+#define  @SML_MARSHALL_LARGE_PREFIX@_IS_MASTER_ROW(aRow)                        \
+    ( (((*(stlChar*)(aRow)) & @SML_MARSHALL_LARGE_PREFIX@_FLAG_IS_MASTER) ==    \
+       @SML_MARSHALL_LARGE_PREFIX@_FLAG_IS_MASTER) ?                            \
+      STL_TRUE : STL_FALSE)
+#define  @SML_MARSHALL_LARGE_PREFIX@_IS_CONT_COL(aRow)                          \
+    ( (((*(stlChar*)(aRow)) & @SML_MARSHALL_LARGE_PREFIX@_FLAG_IS_CONT_COL) ==  \
+       @SML_MARSHALL_LARGE_PREFIX@_FLAG_IS_CONT_COL) ?                          \
+      STL_TRUE : STL_FALSE)
+#define  @SML_MARSHALL_LARGE_PREFIX@_IS_CONT_COL_LAST(aRow)                         \
+    ( (((*(stlChar*)(aRow)) & @SML_MARSHALL_LARGE_PREFIX@_FLAG_IS_CONT_COL_LAST) == \
+       @SML_MARSHALL_LARGE_PREFIX@_FLAG_IS_CONT_COL_LAST) ?                         \
+      STL_TRUE : STL_FALSE)
+#define  @SML_MARSHALL_LARGE_PREFIX@_IS_LOCKED(aRow)                            \
+    ( (((*(stlChar*)(aRow)) & @SML_MARSHALL_LARGE_PREFIX@_FLAG_IS_LOCKED) ==    \
+       @SML_MARSHALL_LARGE_PREFIX@_FLAG_IS_LOCKED) ?                            \
+      STL_TRUE : STL_FALSE)
+#define  @SML_MARSHALL_LARGE_PREFIX@_IS_RTS_BOUND(aRow)                         \
+    ( (((*(stlChar*)(aRow)) & @SML_MARSHALL_LARGE_PREFIX@_FLAG_IS_RTS_BOUND) == \
+       @SML_MARSHALL_LARGE_PREFIX@_FLAG_IS_RTS_BOUND) ?                         \
+      STL_TRUE : STL_FALSE)
+#define  @SML_MARSHALL_LARGE_PREFIX@_HAS_NEXT_LINK(aRow)                            \
+    ( (((*(stlChar*)(aRow)) & @SML_MARSHALL_LARGE_PREFIX@_FLAG_HAS_NEXT_LINK) ==    \
+       @SML_MARSHALL_LARGE_PREFIX@_FLAG_HAS_NEXT_LINK) ?                            \
+      STL_TRUE : STL_FALSE)
+ #define  @SML_MARSHALL_LARGE_PREFIX@_IS_IN_USE(aRow)                              \
+     ( (((*(stlChar*)(aRow)) & @SML_MARSHALL_LARGE_PREFIX@_FLAG_IN_USE) ==      \
+        @SML_MARSHALL_LARGE_PREFIX@_FLAG_IN_USE) ?                              \
+       STL_TRUE : STL_FALSE)
+
+#define  @SML_MARSHALL_LARGE_PREFIX@_GET_TCN(aRow, aTcn)                                    \
+    ( STL_WRITE_INT32((aTcn), (stlChar*)(aRow) + @SML_MARSHALL_LARGE_PREFIX@_OFFSET_TCN) )
+#define  @SML_MARSHALL_LARGE_PREFIX@_GET_SCN(aRow, aScn)                                            \
+    ( STL_WRITE_INT64((aScn), (stlChar*)(aRow) + @SML_MARSHALL_LARGE_PREFIX@_OFFSET_SCN_RTSSEQ) )
+#define  @SML_MARSHALL_LARGE_PREFIX@_GET_RTSSEQ(aRow, aRtsSeq)                                      \
+    ( STL_WRITE_INT8((aRtsSeq), (stlChar*)(aRow) + @SML_MARSHALL_LARGE_PREFIX@_OFFSET_SCN_RTSSEQ) )
+#define  @SML_MARSHALL_LARGE_PREFIX@_GET_TRANS_ID(aRow, aTransId)                                   \
+    ( STL_WRITE_INT64((aTransId), (stlChar*)(aRow) + @SML_MARSHALL_LARGE_PREFIX@_OFFSET_TRANS_ID) )
+#define  @SML_MARSHALL_LARGE_PREFIX@_GET_ROLLBACK_PID(aRow, aPid)                                   \
+    ( STL_WRITE_INT32((aPid), (stlChar*)(aRow) + @SML_MARSHALL_LARGE_PREFIX@_OFFSET_ROLLBACK_PID) )
+#define  @SML_MARSHALL_LARGE_PREFIX@_GET_ROLLBACK_OFFSET(aRow, aOffset)                             \
+    ( STL_WRITE_INT16((aOffset), (stlChar*)(aRow) + @SML_MARSHALL_LARGE_PREFIX@_OFFSET_ROLLBACK_OFFSET) )
+#define  @SML_MARSHALL_LARGE_PREFIX@_GET_COLUMN_CNT(aRow, aColCnt)                                  \
+    ( STL_WRITE_INT16((aColCnt), (stlChar*)(aRow) + @SML_MARSHALL_LARGE_PREFIX@_OFFSET_COLUMN_CNT) )
+#define  @SML_MARSHALL_LARGE_PREFIX@_GET_PAD_SPACE(aRow, aPadSpace)                                 \
+    ( STL_WRITE_INT16((aPadSpace), (stlChar*)(aRow) + @SML_MARSHALL_LARGE_PREFIX@_OFFSET_PAD_SPACE) )
+#define  @SML_MARSHALL_LARGE_PREFIX@_GET_LINK_PID(aRow, aPid)                                   \
+    ( STL_WRITE_INT32((aPid), (stlChar*)(aRow) + @SML_MARSHALL_LARGE_PREFIX@_OFFSET_LINK_PID) )
+#define  @SML_MARSHALL_LARGE_PREFIX@_GET_LINK_OFFSET(aRow, aOffset)                                 \
+    ( STL_WRITE_INT16((aOffset), (stlChar*)(aRow) + @SML_MARSHALL_LARGE_PREFIX@_OFFSET_LINK_OFFSET) )
+
+#endif /* _@SML_MARSHALL_LARGE_PREFIX@ROWDEF_H_ */

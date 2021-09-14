@@ -1,0 +1,13 @@
+1. Test User
+  => PASS
+2. Test Group
+  => PASS
+3. Test Abnormal User
+ERRCODE: 4194344, ERRSTRING: No such object (@@@@@@@@)
+ERRCODE: 4194331, ERRSTRING: Truncation occurred on I/O operation
+ERRCODE: 4194331, ERRSTRING: Truncation occurred on I/O operation
+  => PASS
+4. Test Abnormal Group
+ERRCODE: 4194344, ERRSTRING: No such object (@@@@@@@@)
+ERRCODE: 4194331, ERRSTRING: Truncation occurred on I/O operation
+  => PASS

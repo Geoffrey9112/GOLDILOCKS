@@ -1,0 +1,30 @@
+1. Test stlOpenFile & stlCloseFile
+- Access violation
+  => PASS
+- No Entry
+  => PASS
+2. Test stlReadFile & stlWriteFile
+- Write 0 bytes
+  => PASS
+- Write n bytes
+  => PASS
+- Read 0 bytes
+  => PASS
+- Read n bytes
+  => PASS
+- Read bad file
+  => PASS
+3. Test stlCopyFile
+  => PASS
+4. Test stlAppendFile
+  => PASS
+5. Test stlTruncateFile
+  => PASS
+6. Test stlLockFile & stlUnlockFile
+  => PASS
+7. Test stlRemoveFile
+  => PASS
+8. Test stlLinkFile
+  => PASS
+9. Test stlGetFileStat
+  => PASS

@@ -1,0 +1,285 @@
+/*******************************************************************************
+ * @STL_PARSER_PREFIX@Lex.h
+ *
+ * Copyright (c) 2011, SUNJESOFT Inc.
+ *
+ *
+ * IDENTIFICATION & REVISION
+ *        $Id$
+ *
+ * NOTES
+ *
+ *
+ ******************************************************************************/
+
+#ifndef _@STL_PARSER_PREFIX@LEX_H_
+#define _@STL_PARSER_PREFIX@LEX_H_ 1
+
+
+/**
+ * @file @STL_PARSER_PREFIX@Lex.h
+ * @brief Parser Lex
+ */
+
+
+/**
+ * @defgroup @STL_PARSER_PREFIX@Lex Lex for Parser
+ * @ingroup STL
+ * @{
+ */
+
+#define YYSTYPE         void *
+#define YYLTYPE         stlInt32
+#define YY_EXTRA_TYPE   stlParseParam *
+
+typedef stlStatus (*stlParseAllocator)( void          * aContext,
+                                        stlInt32        aAllocSize,
+                                        void         ** aAddr,
+                                        stlErrorStack * aErrorStack );
+
+/******************************************************************************* 
+ * Parse Parameter
+ ******************************************************************************/
+
+/**
+ * @brief Parse Parameter Structure
+ */
+typedef struct stlParseParam
+{
+    void             * mScanner;     /**< scanner for flex & bison */
+    stlInt32           mPosition;    /**< current position of parameter */
+    stlInt32           mLineNo;      /**< line number of parameter */
+    stlInt32           mColumn;      /**< column number of parameter */
+    stlInt32           mLength;      /**< length of parameter */
+    stlBool            mHasHintErr;  /**< Has Hint Error */
+    stlBool            mErrSkip;     /**< Error Skip Flag */
+    stlBool            mErrClear;    /**< Error Clear Flag */
+    stlInt16           mErrStatus;   /**< Error Status for Parsing */ 
+    stlChar          * mErrMsg;      /**< Error Message */ 
+    stlInt32           mStmtLength;  /**< Length of Statement String */
+    stlChar          * mBuffer;      /**< Buffer for Statement String */
+    stlInt32           mCurrLoc;     /**< current location of parameter */
+    stlInt32           mNextLoc;     /**< current location of parameter */
+    void             * mParseTree;   /**< parse tree */
+    void             * mSchemaObjectList;   /**< 구문에 등장하는 Schema Object Name List */
+    stlParseAllocator  mAllocator;   /**< memory allocator */
+    stlErrorStack    * mErrorStack;  /**< error stack */
+    void             * mContext;     /**< Context */
+} stlParseParam;
+
+/******************************************************************************* 
+ * KEY WORD
+ ******************************************************************************/
+
+#define STL_KEY_WORD_MAX_LENGTH      ( 64 )
+
+#define STL_KEY_WORD_COUNT( list )   ( STL_SIZEOF( list ) / STL_SIZEOF( list[0] ) )
+
+
+/**
+ * @brief keyword category
+ */
+typedef enum
+{
+    STL_KEYWORD_CATEGORY_RESERVED = 0,   /**< RESERVED KEYWORD in SQL-STANDARD */
+    STL_KEYWORD_CATEGORY_NON_RESERVED,   /**< NON-RESERVED KEYWORD in SQL-STANDARD */
+    STL_KEYWORD_CATEGORY_GSQL            /**< ONLY FOR GSQL : NON-RESERVED KEYWORD로 간주 */
+} stlKeyWordCategory;
+
+
+/**
+ * @brief keyword 정보
+ */
+typedef struct stlKeyWord
+{
+    const stlChar       * mName;       /**< keyword name : in upper case */
+    stlInt16              mTokenCode;  /**< token code for keyword*/
+    stlKeyWordCategory    mCategory;   /**< keyword category */
+} stlKeyWord;
+
+
+/**
+ * @brief keyword list
+ */
+extern const stlKeyWord   @STL_PARSER_PREFIX@KeyWordList[];
+
+
+/**
+ * @brief keyword count
+ */
+extern const stlInt16     @STL_PARSER_PREFIX@KeyWordCount;
+
+
+/******************************************************************************* 
+ * MACROS
+ ******************************************************************************/
+
+#if 1
+#define STL_PARSER_CHECK(a)                             \
+    {                                                   \
+        a;                                              \
+        if( param->mErrStatus != STL_SUCCESS )          \
+        {                                               \
+            YYABORT;                                    \
+        }                                               \
+    }
+#else
+#define STL_PARSER_CHECK(a)   ;
+#endif
+
+#define STL_PARSER_ERROR         @STL_PARSER_PREFIX@ ## error
+#define STL_PARSER_LEX           @STL_PARSER_PREFIX@ ## lex
+#define STL_PARSER_LEX_INIT      @STL_PARSER_PREFIX@ ## lex_init
+#define STL_PARSER_LEX_DESTROY   @STL_PARSER_PREFIX@ ## lex_destroy
+#define STL_PARSER_SET_EXTRA     @STL_PARSER_PREFIX@ ## set_extra
+#define STL_PARSER_PARSE         @STL_PARSER_PREFIX@ ## parse
+#define STL_PARSER_CHAR          @STL_PARSER_PREFIX@ ## char
+
+#define STL_PARSER_NOT_SUPPORT( pos )                           \
+    {                                                           \
+        stlInt32 sLineNo    = 1;                                \
+        stlInt32 sColOffset = 1;                                \
+        stlInt32 sOffset    = 0;                                \
+        stlChar * sStartPtr = param->mBuffer;                   \
+                                                                \
+        STL_DASSERT( pos >= 0 );                                \
+                                                                \
+        for ( sOffset = 0; sOffset < pos; sOffset++ )           \
+        {                                                       \
+            if ( sStartPtr[sOffset] == '\n' )                   \
+            {                                                   \
+                sLineNo++;                                      \
+                sColOffset = 1;                                 \
+            }                                                   \
+            else                                                \
+            {                                                   \
+                sColOffset++;                                   \
+            }                                                   \
+        }                                                       \
+                                                                \
+        param->mLineNo = sLineNo;                               \
+        param->mColumn = sColOffset;                            \
+        param->mLength = 0;                                     \
+                                                                \
+        STL_PARSER_ERROR( NULL, param, param->mScanner, NULL ); \
+                                                                \
+        param->mErrStatus = STL_FAILURE;                        \
+        stlPushError( STL_ERROR_LEVEL_ABORT,                    \
+                      STL_ERRCODE_PARSER_NOTSUPPORT,            \
+                      NULL,                                     \
+                      (param)->mErrorStack );                   \
+        YYABORT;                                                \
+    }
+
+#define YYCHAR    (yychar)
+
+#define v0        (yyval)
+
+#define v1        (yyvsp[(1) - (yylen)])
+#define v2        (yyvsp[(2) - (yylen)])
+#define v3        (yyvsp[(3) - (yylen)])
+#define v4        (yyvsp[(4) - (yylen)])
+#define v5        (yyvsp[(5) - (yylen)])
+#define v6        (yyvsp[(6) - (yylen)])
+#define v7        (yyvsp[(7) - (yylen)])
+#define v8        (yyvsp[(8) - (yylen)])
+#define v9        (yyvsp[(9) - (yylen)])
+#define v10       (yyvsp[(10) - (yylen)])
+#define v11       (yyvsp[(11) - (yylen)])
+#define v12       (yyvsp[(12) - (yylen)])
+#define v13       (yyvsp[(13) - (yylen)])
+#define v14       (yyvsp[(14) - (yylen)])
+#define v15       (yyvsp[(15) - (yylen)])
+#define v16       (yyvsp[(16) - (yylen)])
+#define v17       (yyvsp[(17) - (yylen)])
+#define v18       (yyvsp[(18) - (yylen)])
+#define v19       (yyvsp[(19) - (yylen)])
+#define v20       (yyvsp[(10) - (yylen)])
+
+#define a0        (yyloc)
+
+#define a1        (yylsp[(1) - (yylen)])
+#define a2        (yylsp[(2) - (yylen)])
+#define a3        (yylsp[(3) - (yylen)])
+#define a4        (yylsp[(4) - (yylen)])
+#define a5        (yylsp[(5) - (yylen)])
+#define a6        (yylsp[(6) - (yylen)])
+#define a7        (yylsp[(7) - (yylen)])
+#define a8        (yylsp[(8) - (yylen)])
+#define a9        (yylsp[(9) - (yylen)])
+#define a10       (yylsp[(10) - (yylen)])
+#define a11       (yylsp[(11) - (yylen)])
+#define a12       (yylsp[(12) - (yylen)])
+#define a13       (yylsp[(13) - (yylen)])
+#define a14       (yylsp[(14) - (yylen)])
+#define a15       (yylsp[(15) - (yylen)])
+#define a16       (yylsp[(16) - (yylen)])
+#define a17       (yylsp[(17) - (yylen)])
+#define a18       (yylsp[(18) - (yylen)])
+#define a19       (yylsp[(19) - (yylen)])
+#define a20       (yylsp[(20) - (yylen)])
+
+
+#define STL_INIT_PARSE_PARAM( param, string, allocator, errorstack, context )   \
+    {                                                                           \
+        (param)->mPosition = 0;                                                 \
+        (param)->mLineNo = 1;                                                   \
+        (param)->mColumn = 1;                                                   \
+        (param)->mLength = 0;                                                   \
+        (param)->mHasHintErr = STL_FALSE;                                       \
+        (param)->mErrSkip = STL_FALSE;                                          \
+        (param)->mErrClear = STL_FALSE;                                         \
+        (param)->mErrStatus = STL_SUCCESS;                                      \
+        (param)->mBuffer = string;                                              \
+        (param)->mStmtLength = stlStrlen(string);                               \
+        (param)->mCurrLoc = 0;                                                  \
+        (param)->mNextLoc = 0;                                                  \
+        (param)->mParseTree = NULL;                                             \
+        (param)->mSchemaObjectList = NULL;                                      \
+        (param)->mErrMsg = NULL;                                                \
+        (param)->mAllocator = allocator;                                        \
+        (param)->mErrorStack = errorstack;                                      \
+        (param)->mContext = context;                                            \
+        STL_TRY( STL_PARSER_LEX_INIT( &((param)->mScanner) ) == 0 );            \
+        STL_PARSER_SET_EXTRA( (param), (param)->mScanner );                     \
+    }
+
+
+/******************************************************************************* 
+ * FUNCTIONS
+ ******************************************************************************/
+
+
+const stlKeyWord * @STL_PARSER_PREFIX@ScanKeyWordLookup( stlChar * aIdentifier );
+
+stlInt32 @STL_PARSER_PREFIX@GetNextToken( stlParseParam * param, void *scanner );
+
+stlBool  @STL_PARSER_PREFIX@IsIdentifier( stlInt32  aToken,
+                                          stlChar  *aStr,
+                                          stlInt32  aStrLen );
+
+/**
+ * Lexer
+ */
+
+stlInt32 STL_PARSER_ERROR( YYLTYPE        * aLocation,
+                           YY_EXTRA_TYPE    aParam,
+                           void           * aScanner,
+                           const stlChar  * aMsg );
+
+stlInt32 STL_PARSER_LEX( YYSTYPE  * aValue,
+                         YYLTYPE  * aLocation,
+                         void     * aScanner );
+
+stlInt32 STL_PARSER_LEX_INIT( void ** );
+
+stlInt32 STL_PARSER_LEX_DESTROY( void * );
+
+void STL_PARSER_SET_EXTRA( YY_EXTRA_TYPE, void * );
+
+stlInt32 STL_PARSER_PARSE( YY_EXTRA_TYPE, void * );
+
+
+/** @} */
+
+#endif /* _@STL_PARSER_PREFIX@LEX_H_ */

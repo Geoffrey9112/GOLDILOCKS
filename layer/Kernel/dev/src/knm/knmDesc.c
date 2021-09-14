@@ -1,0 +1,914 @@
+/*******************************************************************************
+ * knmDesc.c
+ *
+ * Copyright (c) 2011, SUNJESOFT Inc.
+ *
+ *
+ * IDENTIFICATION & REVISION
+ *        $Id: knmDesc.c 5797 2012-09-27 02:32:51Z jhkim $
+ *
+ * NOTES
+ *    
+ *
+ ******************************************************************************/
+
+/**
+ * @file knmDesc.c
+ * @brief Kernel Layer Memory Allocator Description
+ */
+
+#include <stl.h>
+#include <dtl.h>
+#include <knl.h>
+#include <knlDef.h>
+#include <knDef.h>
+
+extern knsEntryPoint * gKnEntryPoint;
+
+/**
+ * @addtogroup knmDesc
+ * @{
+ */
+
+/**
+ * @brief Allocator Description
+ */
+knlAllocatorDesc gKnmAllocatorDesc[] =
+{
+    /*
+     * dynamic allocator for kernel layer
+     */
+    
+    {
+        KNL_ALLOCATOR_KERNEL_SHARED_VARIABLE_STATIC_AREA,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_ROOT,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_SSA_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_KERNEL,
+        "shared variable static area"
+    },
+    {
+        KNL_ALLOCATOR_KERNEL_PRIVATE_STATIC_AREA,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_ROOT,
+        KNL_MEM_CATEGORY_SESSION,
+        KNM_DYNAMIC_PSA_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_KERNEL,
+        "private static area"
+    },
+    {
+        KNL_ALLOCATOR_KERNEL_EVENT,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_KERNEL,
+        "event dynamic memory"
+    },
+    {
+        KNL_ALLOCATOR_KERNEL_SQL_FIXING_BLOCK,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_KERNEL,
+        "fixing block dynamic memory"
+    },
+    {
+        KNL_ALLOCATOR_KERNEL_BIND_PARAMETER,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_SESSION,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_KERNEL,
+        "dynamic allocator for parameter"
+    },
+    {
+        KNL_ALLOCATOR_KERNEL_LONG_VARYING,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_SESSION,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_KERNEL,
+        "dynamic allocator for long varying types"
+    },
+    {
+        KNL_ALLOCATOR_KERNEL_PLAN_CACHE,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_PLAN,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_KERNEL,
+        "dynamic allocator for plan cache"
+    },
+    {
+        KNL_ALLOCATOR_KERNEL_FLANGE,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_PLAN,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_KERNEL,
+        "flange memory for plan cache"
+    },
+    {
+        KNL_ALLOCATOR_KERNEL_OPERERATION,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_ROOT,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_KERNEL,
+        "heap memory for process operation"
+    },
+    {
+        KNL_ALLOCATOR_KERNEL_FILE_MANAGER,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_KERNEL,
+        "process file manager"
+    },
+
+    /*
+     * region allocator for kernel layer
+     */
+
+    {
+        KNL_ALLOCATOR_KERNEL_VARCHAR_PROPERTY,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_SESSION,
+        0,   /* mMinFragSize */
+        STL_LAYER_KERNEL,
+        "region allocator for session varchar properties"
+    },
+    {
+        KNL_ALLOCATOR_KERNEL_PROPERTY_MANAGER,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        0,   /* mMinFragSize */
+        STL_LAYER_KERNEL,
+        "memory for property manager"
+    },
+    {
+        KNL_ALLOCATOR_KERNEL_FIXED_TABLE,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        0,   /* mMinFragSize */
+        STL_LAYER_KERNEL,
+        "heap memory for fixed table management"
+    },
+
+    /*
+     * region allocator for server Communication layer
+     */
+
+    {
+        KNL_ALLOCATOR_SERVER_COMMUNICATION_REGION_SESSION,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        0,   /* mMinFragSize */
+        STL_LAYER_SERVER_COMMUNICATION,
+        "region memory for packet or operation"
+    },
+
+    {
+        KNL_ALLOCATOR_SERVER_COMMUNICATION_REGION_SEND_POLLING,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        0,   /* mMinFragSize */
+        STL_LAYER_SERVER_COMMUNICATION,
+        "region memory for send polling buffer"
+    },
+
+    /*
+     * dynamic allocator for storage manager layer
+     */
+
+    {
+        KNL_ALLOCATOR_STORAGE_MANAGER_MOUNT,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_STORAGE_MANAGER,
+        "shared memory for MOUNT storage manager"
+    },
+    {
+        KNL_ALLOCATOR_STORAGE_MANAGER_OPEN,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_STORAGE_MANAGER,
+        "shared memory for OPEN storage manager"
+    },
+    {
+        KNL_ALLOCATOR_STORAGE_MANAGER_SESSION_DYNAMIC,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_SESSION,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_STORAGE_MANAGER,
+        "session level dynamic shared memory"
+    },
+    {
+        KNL_ALLOCATOR_STORAGE_MANAGER_PARENT_TRANSACTION,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_STORAGE_MANAGER,
+        "parent shared memory allocator for transactions"
+    },
+    {
+        KNL_ALLOCATOR_STORAGE_MANAGER_TRANSACTION,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_TRANSACTION,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_STORAGE_MANAGER,
+        "shared memory for transaction"
+    },
+    {
+        KNL_ALLOCATOR_STORAGE_MANAGER_PARENT_LOCK_TABLE,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_STORAGE_MANAGER,
+        "parent shared memory allocator for lock tables"
+    },
+    {
+        KNL_ALLOCATOR_STORAGE_MANAGER_LOCK_TABLE,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_TRANSACTION,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_STORAGE_MANAGER,
+        "shared memory for lock table"
+    },
+    {
+        KNL_ALLOCATOR_STORAGE_MANAGER_DYNAMIC_OPERATION,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_OPERATION,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_STORAGE_MANAGER,
+        "heap dynamic memory for operation"
+    },
+    {
+        KNL_ALLOCATOR_STORAGE_MANAGER_PARENT_STATEMENT,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_SESSION,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_STORAGE_MANAGER,
+        "parent allocator for storage manager statements"
+    },
+
+    /*
+     * region allocator for storage manager layer
+     */
+    
+    {
+        KNL_ALLOCATOR_STORAGE_MANAGER_REGION_OPERATION,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_OPERATION,
+        0, /* mMinFragSize */
+        STL_LAYER_STORAGE_MANAGER,
+        "heap region memory for operation"
+    },
+    {
+        KNL_ALLOCATOR_STORAGE_MANAGER_LOG_OPERATION,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_OPERATION,
+        0, /* mMinFragSize */
+        STL_LAYER_STORAGE_MANAGER,
+        "heap memory for log operation"
+    },
+    {
+        KNL_ALLOCATOR_STORAGE_MANAGER_SESSION_REGION,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_SESSION,
+        0, /* mMinFragSize */
+        STL_LAYER_STORAGE_MANAGER,
+        "session level region memory"
+    },
+    {
+        KNL_ALLOCATOR_STORAGE_MANAGER_STATEMENT,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_RANDOM,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_SESSION,
+        0, /* mMinFragSize */
+        STL_LAYER_STORAGE_MANAGER,
+        "statement level region memory"
+    },
+
+    /*
+     * dynamic allocator for execution library layer
+     */
+    
+    {
+        KNL_ALLOCATOR_EXECUTION_LIBRARY_NOMOUNT_DICT_CACHE,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_EXECUTION_LIBRARY,
+        "shared memory for NOMOUNT dictionary cache"
+    },
+    {
+        KNL_ALLOCATOR_EXECUTION_LIBRARY_NOMOUNT_HASH_ELEMENT,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_KEEP_EMPTY_CHUNK,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_EXECUTION_LIBRARY,
+        "shared memory for hash element of NOMOUNT dictionary cache"
+    },
+    {
+        KNL_ALLOCATOR_EXECUTION_LIBRARY_NOMOUNT_HASH_RELATED_OBJECT,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_KEEP_EMPTY_CHUNK,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_EXECUTION_LIBRARY,
+        "shared memory for related object of NOMOUNT dictionary cache"
+    },
+    {
+        KNL_ALLOCATOR_EXECUTION_LIBRARY_NOMOUNT_PENDING_OPERATION,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_EXECUTION_LIBRARY,
+        "shared memory for NOMOUNT execution pending operation"
+    },
+    {
+        KNL_ALLOCATOR_EXECUTION_LIBRARY_MOUNT_DICT_CACHE,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_EXECUTION_LIBRARY,
+        "shared memory for MOUNT dictionary cache"
+    },
+    {
+        KNL_ALLOCATOR_EXECUTION_LIBRARY_MOUNT_HASH_ELEMENT,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_KEEP_EMPTY_CHUNK,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_EXECUTION_LIBRARY,
+        "shared memory for hash element of MOUNT dictionary cache"
+    },
+    {
+        KNL_ALLOCATOR_EXECUTION_LIBRARY_MOUNT_HASH_RELATED_OBJECT,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_KEEP_EMPTY_CHUNK,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_EXECUTION_LIBRARY,
+        "shared memory for related object of MOUNT dictionary cache"
+    },
+    {
+        KNL_ALLOCATOR_EXECUTION_LIBRARY_MOUNT_PENDING_OPERATION,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_EXECUTION_LIBRARY,
+        "shared memory for MOUNT execution pending operation"
+    },
+    {
+        KNL_ALLOCATOR_EXECUTION_LIBRARY_DICT_CACHE,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_EXECUTION_LIBRARY,
+        "shared memory for dictionary cache"
+    },
+    {
+        KNL_ALLOCATOR_EXECUTION_LIBRARY_HASH_ELEMENT,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_KEEP_EMPTY_CHUNK,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_EXECUTION_LIBRARY,
+        "shared memory for hash element of dictionary cache"
+    },
+    {
+        KNL_ALLOCATOR_EXECUTION_LIBRARY_HASH_RELATED_OBJECT,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_KEEP_EMPTY_CHUNK,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_EXECUTION_LIBRARY,
+        "shared memory for related object of dictionary cache"
+    },
+    {
+        KNL_ALLOCATOR_EXECUTION_LIBRARY_DICT_RELATED_TRANSACTION,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_KEEP_EMPTY_CHUNK,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_EXECUTION_LIBRARY,
+        "shared memory for transactions that modify related object of dictionary cache"
+    },
+    {
+        KNL_ALLOCATOR_EXECUTION_LIBRARY_PENDING_OPERATION,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_EXECUTION_LIBRARY,
+        "shared memory for execution pending operation"
+    },
+    {
+        KNL_ALLOCATOR_EXECUTION_LIBRARY_SESSION_OBJECT,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_SESSION,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_EXECUTION_LIBRARY,
+        "dynamic memory for session objects"
+    },
+    {
+        KNL_ALLOCATOR_EXECUTION_LIBRARY_CURSOR_SLOT,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_SESSION,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_EXECUTION_LIBRARY,
+        "dynamic memory for session cursor slot"
+    },
+
+    /*
+     * region allocator for execution library layer
+     */
+    
+    {
+        KNL_ALLOCATOR_EXECUTION_LIBRARY_DICT_OPERATION,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_OPERATION,
+        0, /* mMinFragSize */
+        STL_LAYER_EXECUTION_LIBRARY,
+        "heap memory for dictionary operation"
+    },
+    {
+        KNL_ALLOCATOR_EXECUTION_LIBRARY_SESSION_HASH,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_SESSION,
+        0, /* mMinFragSize */
+        STL_LAYER_EXECUTION_LIBRARY,
+        "hash memory for session objects"
+    },
+
+    /*
+     * dynamic allocator for sql processor layer
+     */
+
+    {
+        KNL_ALLOCATOR_SQL_PROCESSOR_XA_CONTEXT,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_SQL_PROCESSOR,
+        "shared memory for XA Context of SQL processor"
+    },
+    {
+        KNL_ALLOCATOR_SQL_PROCESSOR_COLLISION,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_SESSION,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_SQL_PROCESSOR,
+        "memory for deferred constraint of SQL processor"
+    },
+    {
+        KNL_ALLOCATOR_SQL_PROCESSOR_NLS,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_SESSION,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_SQL_PROCESSOR,
+        "memory for session NLS of SQL processor"
+    },
+    {
+        KNL_ALLOCATOR_SQL_PROCESSOR_PARENT_DBC,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_SESSION,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_SQL_PROCESSOR,
+        "memory for parent DBC of SQL processor"
+    },
+    
+    /*
+     * region allocator for sql processor layer
+     */
+    
+    {
+        KNL_ALLOCATOR_SQL_PROCESSOR_SHARE_SYNTAX_SQL,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_STATEMENT,
+        0, /* mMinFragSize */
+        STL_LAYER_SQL_PROCESSOR,
+        "memory for SQL syntax"
+    },
+    {
+        KNL_ALLOCATOR_SQL_PROCESSOR_SHARE_INIT_PLAN,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_STATEMENT,
+        0, /* mMinFragSize */
+        STL_LAYER_SQL_PROCESSOR,
+        "memory for init plan of SQL plan"
+    },
+    {
+        KNL_ALLOCATOR_SQL_PROCESSOR_NON_PLAN_CACHE,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_STATEMENT,
+        0, /* mMinFragSize */
+        STL_LAYER_SQL_PROCESSOR,
+        "memory for init area of SQL plan"
+    },
+    {
+        KNL_ALLOCATOR_SQL_PROCESSOR_PLAN_CACHE_FOR_ADMIN_SESSION,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_STATEMENT,
+        0, /* mMinFragSize */
+        STL_LAYER_SQL_PROCESSOR,
+        "heap memory for plan area of SQL plan"
+    },
+    {
+        KNL_ALLOCATOR_SQL_PROCESSOR_PLAN_CACHE,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_STATEMENT,
+        0, /* mMinFragSize */
+        STL_LAYER_SQL_PROCESSOR,
+        "memory for plan area of SQL plan"
+    },
+    {
+        KNL_ALLOCATOR_SQL_PROCESSOR_SHARE_DATA_PLAN,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_STATEMENT,
+        0, /* mMinFragSize */
+        STL_LAYER_SQL_PROCESSOR,
+        "memory for data area of SQL plan"
+    },
+    {
+        KNL_ALLOCATOR_SQL_PROCESSOR_SHARE_STATEMENT,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_STATEMENT,
+        0, /* mMinFragSize */
+        STL_LAYER_SQL_PROCESSOR,
+        "memory for statements of SQL Processor"
+    },
+    {
+        KNL_ALLOCATOR_SQL_PROCESSOR_PARSING,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_STATEMENT,
+        0, /* mMinFragSize */
+        STL_LAYER_SQL_PROCESSOR,
+        "heap memory for SQL parsing and validation"
+    },
+    {
+        KNL_ALLOCATOR_SQL_PROCESSOR_RUNNING,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_STATEMENT,
+        0, /* mMinFragSize */
+        STL_LAYER_SQL_PROCESSOR,
+        "heap memory for SQL execution"
+    },
+
+    /*
+     * dynamic allocator for session layer
+     */
+    
+    {
+        KNL_ALLOCATOR_SESSION_SHARED_MEMORY,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_SESSION,
+        "shared memory for session"
+    },
+    {
+        KNL_ALLOCATOR_SESSION_DYNAMIC_STATEMENT,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_SESSION,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_SESSION,
+        "dynamic memory for session statements"
+    },
+
+    /*
+     * region allocator for session layer
+     */
+    
+    {
+        KNL_ALLOCATOR_SESSION_REGION_STATEMENT_PARAM,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_SESSION,
+        0, /* mMinFragSize */
+        STL_LAYER_SESSION,
+        "region memory for session statement parameter"
+    },
+    {
+        KNL_ALLOCATOR_SESSION_REGION_STATEMENT_COLUMN,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_SHM | KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_SESSION,
+        0, /* mMinFragSize */
+        STL_LAYER_SESSION,
+        "region memory for session statement columns"
+    },
+    {
+        KNL_ALLOCATOR_SESSION_OPERATION,
+        KNL_ALLOCATOR_TYPE_REGION,
+        KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_OPERATION,
+        0, /* mMinFragSize */
+        STL_LAYER_SESSION,
+        "heap memory for session operation"
+    },
+
+    /*
+     * dynamic allocator for server library layer
+     */
+    
+    {
+        KNL_ALLOCATOR_SERVER_LIBRARY_SHARED_HANDLE,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_SHM,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_SERVER_LIBRARY,
+        "dynamic memory for shared handle"
+    },
+    
+    /*
+     * dynamic allocator for gliese tool layer
+     */
+    
+    {
+        KNL_ALLOCATOR_DISPATCHER_DYNAMIC,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_GLIESE_TOOL,
+        "heap memory for dispatcher"
+    },
+    {
+        KNL_ALLOCATOR_GBALANCER,
+        KNL_ALLOCATOR_TYPE_DYNAMIC,
+        KNL_MEM_STORAGE_TYPE_HEAP,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_MAX,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_DATABASE,
+        KNM_DYNAMIC_DEFAULT_MINIMUM_FRAGMENT_SIZE,
+        STL_LAYER_GLIESE_TOOL,
+        "heap memory for balancer"
+    },
+    
+    /*
+     * invalid max allocator
+     */
+    
+    {
+        KNL_ALLOCATOR_MAX,
+        KNL_ALLOCATOR_TYPE_NONE,
+        KNL_MEM_STORAGE_TYPE_NONE,
+        KNL_MEM_ATTR_NONE,
+        KNL_UNMARK_SEQ_ORDERED,
+        KNL_ALLOCATOR_LEVEL_INTERNAL,
+        KNL_MEM_CATEGORY_NONE,
+        0, /* mMinFragSize */
+        STL_LAYER_NONE,
+        NULL,
+    }
+};
+
+/** @} */

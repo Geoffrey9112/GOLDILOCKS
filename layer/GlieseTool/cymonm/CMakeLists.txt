@@ -1,0 +1,99 @@
+CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
+
+#set the Standard Library
+SET (ST_LIBRARY st)
+LINK_DIRECTORIES (${PRODUCT_LAYER_STANDARD_DIR}/dev/lib)
+
+#set the DataType Library
+SET (DT_LIBRARY dt)
+LINK_DIRECTORIES (${PRODUCT_LAYER_DATATYPE_DIR}/dev/lib)
+
+#set the Kernel Library
+SET (KN_LIBRARY kn)
+LINK_DIRECTORIES (${PRODUCT_LAYER_KERNEL_DIR}/dev/lib)
+
+#set the Server Communication Library
+SET (SC_LIBRARY sc)
+LINK_DIRECTORIES (${PRODUCT_LAYER_SERVERCOMMUNICATION_DIR}/dev/lib)
+
+#set the Storage Library
+SET (SM_LIBRARY sm)
+LINK_DIRECTORIES (${PRODUCT_LAYER_STORAGEMANAGER_DIR}/dev/lib)
+
+#set the Execution Library
+SET (EL_LIBRARY el)
+LINK_DIRECTORIES (${PRODUCT_LAYER_EXECUTIONLIBRARY_DIR}/dev/lib)
+
+#set the SQL Processor Library
+SET (QP_LIBRARY qp)
+LINK_DIRECTORIES (${PRODUCT_LAYER_SQLPROCESSOR_DIR}/dev/lib)
+
+#set the Session Library
+SET (SS_LIBRARY ss)
+LINK_DIRECTORIES (${PRODUCT_LAYER_SESSION_DIR}/dev/lib)
+
+#set the Server Library
+SET (SL_LIBRARY sl)
+LINK_DIRECTORIES (${PRODUCT_LAYER_SERVERLIBRARY_DIR}/dev/lib)
+
+#set the Communication Library
+SET (CM_LIBRARY cm)
+LINK_DIRECTORIES (${PRODUCT_LAYER_COMMUNICATION_DIR}/dev/lib)
+
+#set the Gliese Library
+SET (ZLA_LIBRARY zla)
+LINK_DIRECTORIES (${PRODUCT_LAYER_ODBC_DIR}/dev/lib)
+
+#set the gliesec Library 
+SET (ZLC_LIBRARY zlc)
+LINK_DIRECTORIES (${PRODUCT_LAYER_ODBC_DIR}/dev/lib)
+
+# include directories
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_STANDARD_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_DATATYPE_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_COMMUNICATION_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${PRODUCT_LAYER_ODBC_DIR}/dev/include)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/dev/include)
+
+SET( ZTNM_DIR ${PRODUCT_LAYER_GLIESETOOL_DIR}/cymonm )
+
+AUX_SOURCE_DIRECTORY( ${ZTNM_DIR}/dev/src/ztnm ZTNM_MAIN_SOURCE_FILES )
+AUX_SOURCE_DIRECTORY( ${ZTNM_DIR}/dev/src/ztnf ZTNM_CONFIGURE_SOURCE_FILES )
+
+SET (EXECUTABLE_OUTPUT_PATH ${GLIESE_HOME_BIN})
+
+STL_FLEX_TARGET(ZTNM_CONFIGURE_SCANNER
+                ${ZTNM_DIR}/dev/src/ztnf/ztnfConfigure.l
+                ${ZTNM_DIR}/dev/src/ztnf/ztnfConfigure.yy.c
+                COMPILE_FLAGS "--prefix=ztnfConfigure")
+
+SET_SOURCE_FILES_PROPERTIES(${STL_FLEX_ZTNM_CONFIGURE_SCANNER_OUTPUTS} PROPERTIES GENERATED 1)
+
+STL_BISON_TARGET(ZTNM_CONFIGURE_PARSER
+                 ${ZTNM_DIR}/dev/src/ztnf/ztnfConfigure.y
+                 ${ZTNM_DIR}/dev/src/ztnf/ztnfConfigure.tab.c
+                 COMPILE_FLAGS "--name-prefix=ztnfConfigure --defines=${ZTNM_DIR}/dev/include/ztnfConfigure.tab.h")
+                 
+SET_SOURCE_FILES_PROPERTIES(${STL_BISON_ZTNM_CONFIGURE_PARSER_OUTPUTS} PROPERTIES GENERATED 1)
+
+SET( CYMON_SOURCES_FILES ${ZTNM_MAIN_SOURCE_FILES}
+                         ${ZTNM_CONFIGURE_SOURCE_FILES}  
+                         ${STL_FLEX_ZTNM_CONFIGURE_SCANNER_OUTPUTS}
+                         ${STL_BISON_ZTNM_CONFIGURE_PARSER_OUTPUTS} ) 
+
+IF( ${CMAKE_CPP_COMPILER} )
+    SET_SOURCE_FILES_PROPERTIES( ${CYMON_SOURCES_FILES} PROPERTIES LANGUAGE CXX )
+ENDIF()
+
+LIST(REMOVE_DUPLICATES CYMON_SOURCES_FILES)
+
+ADD_EXECUTABLE( cymonm ${CYMON_SOURCES_FILES})
+
+TARGET_LINK_LIBRARIES ( cymonm ${DT_LIBRARY} 
+                               ${ST_LIBRARY})
+
+############################################
+# PACKAGE( make package )
+############################################
+
+INSTALL( PROGRAMS ${GLIESE_HOME_BIN}/cymonm  DESTINATION ${INSTALL_BINDIR} )

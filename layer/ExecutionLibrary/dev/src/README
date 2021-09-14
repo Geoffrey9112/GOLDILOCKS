@@ -1,0 +1,11 @@
+[include] internal include files
+[ell]     Execution Library layer interface
+[elg]     General Routine
+[eld]     Dictionary
+  [eldt]    Dictionary Tables
+  [eldc]    Dictionary Caches
+[elc]     physical Constraint 
+[elp]     Privilege
+[elx]     Executor
+[elf]     Function
+[els]     Session object (cursor, local temporary table, ...)

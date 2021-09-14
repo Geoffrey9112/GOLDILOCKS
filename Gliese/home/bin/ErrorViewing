@@ -1,0 +1,3 @@
+#!/bin/sh
+
+java -cp $PRODUCT_HOME/layer/GlieseTool/ErrorViewing/dev/bin/ErrorViewing.jar ErrorViewing

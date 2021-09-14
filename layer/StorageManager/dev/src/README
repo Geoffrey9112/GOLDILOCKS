@@ -1,0 +1,55 @@
+[include] internal INCLUDE files
+[smp] Page
+[smt] Tablespace
+  [smtmb] Memory Bitmap
+  [smtdb] Disk Bitmap
+[sms] Segment
+  [smsmb] Memory Bitmap
+  [smsmc] Memory Circular
+  [smsmf] Memory Flat
+  [smsmp] Memory Pending
+  [smsdb] Disk Bitmap
+  [smsdc] Disk Circular
+[smx] trasaction ( = tX )
+  [smxg] Global
+  [smxl] Local
+  [smxm] Mini transaction
+[sma] stAtement
+[smk] locK
+  [smkg] Global
+  [smkl] Local
+[smr] Recovery
+[smh] High availability
+  [smhr] Replication
+  [smhc] raC
+[smd] table Data
+  [smdmpc] Memory Persistent Clusterd
+  [smdmph] Memory Persistent Heap
+  [smdmpp] Memory Persistent Pending
+  [smdmic] Memory Instant Clusterd
+  [smdmih] Memory Instant Hash
+  [smddpc] Disk Persistent Clusterd
+  [smddph] Disk Persistent Heap
+  [smddic] Disk Instant Clusterd
+  [smddih] Disk Instant Heap
+  [smdpfh] Process Fixed Heap
+  [smdpdh] Process Dump Heap
+[smn] iNdex
+  [smnmpb] Memory Persistent B-tree
+  [smnmpr] Memory Persistent R-tree
+  [smnmib] Memory Instant B-tree
+  [smnmir] Memory Instant R-tree
+  [smnmih] Memory Instant Hash
+  [smndpb] Disk Persistent B-tree
+  [smndpr] Disk Persistent R-tree
+  [smndib] Disk Instant B-tree
+  [smndir] Disk Instant R-tree
+[smb] dataBase
+[smi] Iterator
+[smq] seQuence
+[smm] Misc
+[smf] data File
+  [smfm] Memory
+  [smfd] Disk
+[smo] Operators
+[sml] storage manager Layer interface

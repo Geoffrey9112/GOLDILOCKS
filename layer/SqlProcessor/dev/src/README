@@ -1,0 +1,38 @@
+[include] internal include files
+[qll]     SQL Processor Layer interface
+[qlg]     General Routine
+[qlp]     Parser (syntax check) 
+[qlv]     Validator
+[qlb]     Binder
+  [qlbt]     Type Binder
+  [qlbv]     Value Binder 
+[qla]     Access privilege checker
+[qlo]     Optimizer 
+  [qloc]     Code Optimizer 
+  [qlod]     Data Optimizer 
+[qlx]     Executor 
+[qlf]     Fetch 
+
+[qle]     Explain plan
+   
+[qla]     Authorization (User, Role, Privilege)
+[qld]     Database
+[qls]     Schema
+[qlr]     table (Relation)
+[qlrc]    table (Relation) Constraint
+[qlq]     seQuence
+[qly]     sYnonym
+[qli]     Index
+[qlc]     Cluster
+[qlt]     tablespace   
+[qltx]    TranSaction control language
+[qlss]    SyStem, SeSsion control language
+[qlcr]    CuRsor
+[qlpc]    Plan Cache
+
+[qln]     Node
+  [qlnv]     Node Validation
+  [qlno]     Node Optimization
+  [qlnx]     Node eXecution
+  [qlnf]     Function Node (Aggregation, Window etc.)
+  [qlne]     Node Explanation

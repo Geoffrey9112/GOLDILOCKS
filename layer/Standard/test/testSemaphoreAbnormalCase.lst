@@ -1,0 +1,11 @@
+Test stlCreateSemaphore(name too long):
+ERRCODE: 4194332, ERRSTRING: The given name(AAAAAAAA) is too long
+  => PASS
+Test stlTryAcquireSemaphore(twice):
+ERRCODE: 4194332, ERRSTRING: The given name(AAAAAAAA) is too long
+  => PASS
+Test stlTimedAcquireSemaphore(twice):
+ERRCODE: 4194332, ERRSTRING: The given name(AAAAAAAA) is too long
+  => PASS
+Test stlReleaseSemaphore(1 release => 2 acquire):
+  => PASS

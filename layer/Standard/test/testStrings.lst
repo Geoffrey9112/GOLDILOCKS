@@ -1,0 +1,65 @@
+1. Test stlStrlen
+  => PASS
+2. Test stlStrcpy
+  => PASS
+3. Test stlStrncpy
+  => PASS
+4. Test stlStrchr
+  => PASS
+5. Test stlStrrchr
+  => PASS
+6. Test stlStrcmp
+  => PASS
+7. Test stlStrncmp
+  => PASS
+8. Test stlStrcasecmp
+  => PASS
+9. Test stlStrncasecmp
+  => PASS
+10. Test stlStrstr
+  => PASS
+11. Test stlStrtok
+  => PASS
+12. Test stlStrcat
+  => PASS
+13. Test stlStrncat
+This is a test!
+  => PASS
+14. Test stlPrintf
+This is a test
+-123456789
+123456789
+-12345678912345
+12345678912345
+123456789
+726746425
+75bcd15
+75BCD15
+123456.125
+123456789123.123
+  => PASS
+15. Test stlSnprintf
+  => PASS
+16. Test stlVprintf
+This is a test
+-123456789
+123456789
+-12345678912345
+12345678912345
+123456789
+726746425
+75bcd15
+75BCD15
+123456.125
+123456789123.123
+  => PASS
+  => PASS
+17. Test stlVsnprintf
+  => PASS
+  => PASS
+18. Test stlGetPrintfBufferSize
+  => PASS
+19. Test stlStrToFloat64
+  => PASS
+20. Test stlStrToInt64
+  => PASS

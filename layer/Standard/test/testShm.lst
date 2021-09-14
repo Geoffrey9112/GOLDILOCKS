@@ -1,0 +1,5 @@
+Test stlCreateSemaphore(name too long):
+ERRCODE: 4194332, ERRSTRING: The given name(INVALID_SHM_NAME) is too long
+  => PASS
+Test stlAttachShm:
+  => PASS

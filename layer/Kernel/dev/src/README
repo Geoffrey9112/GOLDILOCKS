@@ -1,0 +1,18 @@
+[include] internal include files
+[kna]     latch
+[knb]     break point
+[kne]     event
+[knf]     file management
+[kng]     logger
+[knh]     hash
+[kni]     misc
+[knl]     kernel layer interface
+[knm]     memory management
+[knn]     conditional variable
+[kno]     quick sort
+[knp]     property
+[kns]     shared memory
+[knx]     fixed table
+[knc]     session
+[knt]     hash for XA
+[knpc]    Plan Cache

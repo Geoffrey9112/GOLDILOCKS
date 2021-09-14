@@ -1,0 +1,39 @@
+/*******************************************************************************
+ * @SML_MARSHALL_SMALL_PREFIX@SuppLogDef.h
+ *
+ * Copyright (c) 2011, SUNJESOFT Inc.
+ *
+ *
+ * IDENTIFICATION & REVISION
+ *        $Id: smlSuppLogDef.h.in 5578 2012-09-13 07:05:25Z mkkim $
+ *
+ * NOTES
+ *    
+ *
+ ******************************************************************************/
+
+
+#ifndef _@SML_MARSHALL_LARGE_PREFIX@SUPPLOGDEF_H_
+#define _@SML_MARSHALL_LARGE_PREFIX@SUPPLOGDEF_H_ 1
+
+/**
+ * @file @SML_MARSHALL_SMALL_PREFIX@SuppLogDef.h
+ * @brief Supplemental Log Specification Definitions
+ */
+
+/**
+ * @defgroup @SML_MARSHALL_SMALL_PREFIX@SuppLogType Supplemental Log Type
+ * @{
+ */
+#define @SML_MARSHALL_LARGE_PREFIX@_SUPPL_LOG_UPDATE              (0)  /**< supplemental log to update */
+#define @SML_MARSHALL_LARGE_PREFIX@_SUPPL_LOG_DELETE              (1)  /**< supplemental log to delete */
+#define @SML_MARSHALL_LARGE_PREFIX@_SUPPL_LOG_UPDATE_COLS         (2)  /**< supplemental log to update */
+#define @SML_MARSHALL_LARGE_PREFIX@_SUPPL_LOG_UPDATE_BEFORE_COLS  (3)  /**< before supplemental log to update */
+#define @SML_MARSHALL_LARGE_PREFIX@_SUPPL_LOG_DDL                 (4)  /**< supplemental log to DDL */
+#define @SML_MARSHALL_LARGE_PREFIX@_SUPPL_LOG_DDL_CLR             (5)  /**< supplemental log to DDL CLR */
+#define @SML_MARSHALL_LARGE_PREFIX@_SUPPL_LOG_MAX                 (6)  /**< max */
+
+#define @SML_MARSHALL_LARGE_PREFIX@_MAX_SUPPLEMENTAL_DDL_LOG_SIZE  ( 4096 )  /**< maximum supplemental log body size */
+/** @} */
+
+#endif /* _@SML_MARSHALL_LARGE_PREFIX@SUPPDEF_H_ */

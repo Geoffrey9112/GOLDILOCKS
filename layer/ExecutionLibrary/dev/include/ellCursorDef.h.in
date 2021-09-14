@@ -1,0 +1,110 @@
+/*******************************************************************************
+ * @ELL_MARSHALL_SMALL_PREFIX@CursorDef.h
+ *
+ * Copyright (c) 2011, SUNJESOFT Inc.
+ *
+ *
+ * IDENTIFICATION & REVISION
+ *        $Id$
+ *
+ * NOTES
+ *    
+ *
+ ******************************************************************************/
+
+
+#ifndef _@ELL_MARSHALL_LARGE_PREFIX@_CURSORDEF_H_
+#define _@ELL_MARSHALL_LARGE_PREFIX@_CURSORDEF_H_ 1
+
+/**
+ * @file @ELL_MARSHALL_SMALL_PREFIX@CursorDef.h
+ * @brief Cursor Definitions
+ */
+
+/**
+ * @defgroup  @ELL_MARSHALL_SMALL_PREFIX@CursorProperty  Cursor Property
+ * @ingroup ellCursor
+ * @{
+ */
+
+/**
+ * @brief Cursor Sensitivity
+ */
+typedef enum
+{
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_SENSITIVITY_NA          = 0, /**< N/A */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_SENSITIVITY_INSENSITIVE = 1, /**< INSENSITIVE */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_SENSITIVITY_SENSITIVE   = 2, /**< SENSITIVE */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_SENSITIVITY_ASENSITIVE  = 3, /**< ASENSITIVE */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_SENSITIVITY_MAX         = 4
+} @ELL_MARSHALL_SMALL_PREFIX@CursorSensitivity;
+
+/**
+ * @brief Cursor Scrollability
+ */
+typedef enum
+{
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_SCROLLABILITY_NA        = 0, /**< N/A */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_SCROLLABILITY_NO_SCROLL = 1, /**< NO SCROLL */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_SCROLLABILITY_SCROLL    = 2, /**< SCROLL */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_SCROLLABILITY_MAX       = 3
+} @ELL_MARSHALL_SMALL_PREFIX@CursorScrollability;
+
+/**
+ * @brief Cursor Holdability
+ */
+typedef enum
+{
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_HOLDABILITY_NA           = 0, /**< N/A */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_HOLDABILITY_WITH_HOLD    = 1, /**< WITH HOLD */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_HOLDABILITY_WITHOUT_HOLD = 2, /**< WITHOUT HOLD */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_HOLDABILITY_UNSPECIFIED  = 3, /**< Unspecified */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_HOLDABILITY_MAX          = 4
+} @ELL_MARSHALL_SMALL_PREFIX@CursorHoldability;
+
+/**
+ * @brief Cursor Updatability
+ */
+typedef enum
+{
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_UPDATABILITY_NA            = 0, /**< N/A */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_UPDATABILITY_FOR_READ_ONLY = 1, /**< FOR_READ_ONLY */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_UPDATABILITY_FOR_UPDATE    = 2, /**< FOR_UPDATE */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_UPDATABILITY_MAX           = 3
+} @ELL_MARSHALL_SMALL_PREFIX@CursorUpdatability;
+
+/**
+ * @brief Cursor Returnability
+ */
+typedef enum
+{
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_RETURNABILITY_NA             = 0, /**< N/A */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_RETURNABILITY_WITH_RETURN    = 1, /**< WITH RETURN */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_RETURNABILITY_WITHOUT_RETURN = 2, /**< WITHOUT RETURN */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_RETURNABILITY_MAX            = 3
+} @ELL_MARSHALL_SMALL_PREFIX@CursorReturnability;
+
+/** @} @ELL_MARSHALL_SMALL_PREFIX@CursorProperty  */
+
+/**
+ * @addtogroup @ELL_MARSHALL_SMALL_PREFIX@Cursor
+ * @{
+ */
+
+/**
+ * @brief Cursor Standard Type
+ */
+
+typedef enum
+{
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_STANDARD_NA           = 0, /**< N/A */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_STANDARD_ISO          = 1, /**< ISO  */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_STANDARD_ODBC_STATIC  = 2, /**< ODBC STATIC */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_STANDARD_ODBC_KEYSET  = 3, /**< ODBC KEYSET */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_STANDARD_ODBC_DYNAMIC = 4, /**< ODBC DYNAMIC */
+    @ELL_MARSHALL_LARGE_PREFIX@_CURSOR_STANDARD_MAX          = 5
+} @ELL_MARSHALL_SMALL_PREFIX@CursorStandardType;
+
+/** @} @ELL_MARSHALL_SMALL_PREFIX@Cursor */
+
+#endif /* _@ELL_MARSHALL_LARGE_PREFIX@_CURSORDEF_H_ */
