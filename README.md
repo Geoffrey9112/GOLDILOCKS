@@ -80,7 +80,7 @@ Configuration<br>
 >   * export GOLDILOCKS_HOME=$PRODUCT_HOME/Gliese/home
 >   * export GOLDILOCKS_DATA=$PRODUCT_HOME/Gliese/home
 >   * export PATH=$GOLDILOCKS_HOME/bin:$PATH
->   * LD_LIBRARY_PATH=$GOLDILOCKS_HOME/lib:$LD_LIBRARY_PATH
+>   * export LD_LIBRARY_PATH=$GOLDILOCKS_HOME/lib:$LD_LIBRARY_PATH
 >
 Build<br>
 >* product.sh [debug | release] [parallel]
